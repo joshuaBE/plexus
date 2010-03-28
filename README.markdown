@@ -1,7 +1,7 @@
 Graphy: A Graph Theory Library for Ruby
 =======================================
 
-A framework for graph data structures and algorithms.
+**A framework for graph data structures and algorithms.**
 
 This library is based on [GRATR][1] (itself a fork of [RGL][2]).
 
@@ -23,12 +23,16 @@ These are based on more general algorithm patterns:
 * Djikstra's Algorithm
 * Lexicographic Search
 
-The Tour
---------
+## A quick Tour
 
 ### Arcs
 
-There are two Arc classes, `Graphy::Arc` and `Graphy::Edge`.
+There are two vertices bound classes, `Graphy::Arc` and `Graphy::Edge`. The
+former defines directional edges, the latter undirected edges.
+
+### Vertices
+
+Vertices can be any `Object`.
 
 ### Graph Types
 
@@ -55,23 +59,23 @@ different features and constraints:
 
 ### Data Structures
 
-Use the `Graphy::AdjacencyGraph` module provides a generalized adjacency
-list and an edge list adaptor.
+In order to modelize data structures, make use of the `Graphy::AdjacencyGraph`
+module which provides a generalized adjacency list and an edge list adaptor.
 
 The `Graphy::Digraph` class is the general purpose "swiss army knife" of graph
 classes, most of the other classes are just modifications to this class.
 It is optimized for efficient access to just the out-edges, fast vertex
 insertion and removal at the cost of extra space overhead, etc.
 
-Example Usage
--------------
+## Example Usage
 
-Require the library:
+Using IRB, first require the library:
 
+    $ irb
     require 'graphy'
 
 If you'd like to include all the classes in the current scope (so you
-don't have to prefix with `GraphTeory::`), just:
+don't have to prefix with `Graphy::`), just:
 
     include Graphy
 
@@ -80,7 +84,7 @@ Let's play with the library a bit in IRB:
     >> dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
     => Graphy::Digraph[[2, 3], [1, 6], [2, 4], [4, 5], [1, 2], [6, 4]] 
 
-A few properties of the graph 
+A few properties of the graph we just created:
 
     >> dg.directed?
     => true
@@ -97,36 +101,45 @@ Every object could be a vertex, even the class object `Object`:
 
     >> dg.vertex?(Object)
     => false
+
     >> UndirectedGraph.new(dg).edges.sort.to_s
-    => "(1=2)(2=3)(2=4)(4=5)(1=6)(4=6)"
+    => "[Graphy::Edge[1,2,nil], Graphy::Edge[2,3,nil], Graphy::Edge[2,4,nil],
+         Graphy::Edge[4,5,nil], Graphy::Edge[1,6,nil], Graphy::Edge[6,4,nil]]"
 
 Add inverse edge `(4-2)` to directed graph:
 
     >> dg.add_edge!(4,2)
-    => GRATR::Digraph[[2, 3], [1, 6], [4, 2], [2, 4], [4, 5], [1, 2], [6, 4]]
-  
-`(4-2) == (2-4)` in the undirected graph:
+    => Graphy::DirectedGraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil],
+                             Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[4,2,nil],
+                             Graphy::Arc[6,4,nil]]
+
+`(4-2) == (2-4)` in the undirected graph (4-2 doesn't show up):
 
     >> UndirectedGraph.new(dg).edges.sort.to_s
-    => "(1=2)(2=3)(2=4)(4=5)(1=6)(4=6)"
+    => "[Graphy::Edge[1,2,nil], Graphy::Edge[2,3,nil], Graphy::Edge[2,4,nil],
+         Graphy::Edge[4,5,nil], Graphy::Edge[1,6,nil], Graphy::Edge[6,4,nil]]"
 
-`(4-2) != (2-4)` in directed graphs:
+`(4-2) != (2-4)` in directed graphs (both show up):
 
     >> dg.edges.sort.to_s
-    => "(1-2)(1-6)(2-3)(2-4)(4-2)(4-5)(6-4)"
+    => "[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil],
+         Graphy::Arc[2,4,nil], Graphy::Arc[4,2,nil], Graphy::Arc[4,5,nil],
+         Graphy::Arc[6,4,nil]]"
+
     >> dg.remove_edge! 4,2
-    => GRATR::Digraph[[2, 3], [1, 6], [2, 4], [4, 5], [1, 2], [6, 4]] 
+    => Graphy::DirectedGraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil],
+                             Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
 
 Topological sorting is realized with an iterator:
 
     >> dg.topsort         
-    => [1, 2, 3, 6, 4, 5]
+    => [1, 6, 2, 4, 5, 3]
     >> y = 0; dg.topsort { |v| y += v }; y
     => 21
 
 You can use DOT to visualize the graph:
 
-    >> require 'graph/dot'
+    >> require 'graphy/dot'
     >> dg.write_to_graphic_file('jpg','visualize')
 
 Here's an example showing the module inheritance hierarchy:
@@ -140,8 +153,7 @@ Here's an example showing the module inheritance hierarchy:
 
 Look for more in the examples directory.
  
-History
--------
+## History
 
 This library is based on [GRATR][1] by Shawn Garbett (itself a fork of
 Horst Duchene's RGL library) which is heavily influenced by the Boost
@@ -149,31 +161,26 @@ Graph Library (BGL).
 
 This fork attempts to modernize and extend the API and tests.
 
-References
-----------
+## References
 
 For more information on Graph Theory, you may want to read:
 
-* The [documentation][3] for the Boost Graph Library
-* [The Dictionary of Algorithms and Data Structures][4]
+* the [documentation][3] for the Boost Graph Library
+* [the Dictionary of Algorithms and Data Structures][4]
 
-Credits
--------
+## Credits
 
 See CREDITS.markdown
 
-TODO
-----
+## TODO
 
 See TODO.markdown
 
-CHANGELOG
----------
+## CHANGELOG
 
 See CHANGELOG.markdown
 
-License
--------
+## License
 
 See LICENSE
 
