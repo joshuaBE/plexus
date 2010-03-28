@@ -9,7 +9,7 @@ module Graphy
   # DirectedPseudoGraph is a class that allows for parallel edges, and
   # DirectedMultiGraph is a class that allows for parallel edges and loops
   # as well.
-  class DirectedGraph
+  module DirectedGraph
     module Algorithms
       
       include Search
@@ -20,7 +20,7 @@ module Graphy
       # A directed graph is directed by definition
       #
       # @return [Boolean] always true
-      def directed?()
+      def directed?
         true
       end
 
@@ -28,7 +28,7 @@ module Graphy
       #
       # @return [Graphy::MultiArc, Graphy::Arc] `Graphy::MultiArc` if the graph allows for parallel edges,
       #   `Graphy::Arc` otherwise.
-      def edge_class()
+      def edge_class
         @parallel_edges ? Graphy::MultiArc : Graphy::Arc
       end
       

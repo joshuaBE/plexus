@@ -1,6 +1,7 @@
 module Graphy
 
-  class UndirectedGraph < Graph
+  module UndirectedGraph
+    include Graph
 
     autoload :Algorithms, "graphy/undirected_graph/algorithms"
     
@@ -13,7 +14,8 @@ module Graphy
 
    # This is a Digraph that allows for parallel edges, but does not
    # allow loops
-   class UndirectedPseudoGraph < UndirectedGraph
+   module UndirectedPseudoGraph
+     include UndirectedGraph
      def initialize(*params)
        args = (params.pop if params.last.kind_of? Hash) || {}
        args[:parallel_edges] = true
@@ -22,7 +24,8 @@ module Graphy
    end
 
    # This is a Digraph that allows for parallel edges and loops
-   class UndirectedMultiGraph < UndirectedPseudoGraph
+   module UndirectedMultiGraph
+     UndirectedPseudoGraph
      def initialize(*params)
        args = (params.pop if params.last.kind_of? Hash) || {}
        args[:loops] = true

@@ -2,7 +2,8 @@ module Graphy
 
   # This provides the basic routines needed to implement the Digraph,
   # UndirectedGraph, PseudoGraph, DirectedPseudoGraph, MultiGraph and
-  # DirectedPseudoGraph class.
+  # DirectedPseudoGraph classes, through Graph, under the control of
+  # the GraphAPI.
   module AdjacencyGraph
 
     class ArrayWithAdd < Array # :nodoc:
@@ -46,7 +47,6 @@ module Graphy
       params.select { |p| p.is_a? Array}.each do |a|
         0.step(a.size-1, 2) { |i| add_edge!(a[i], a[i+1])}
       end
-
     end
 
     # Returns true if v is a vertex of this Graph
@@ -125,7 +125,7 @@ module Graphy
     end
 
     # Returns an array of vertices that the graph has
-    def vertices()
+    def vertices
       @vertex_dict.keys
     end
 

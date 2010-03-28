@@ -4,23 +4,34 @@ module Graphy
   # basic functions of a Graph class by using only functions in GraphAPI.
   # An actual implementation still needs to be done, as in Digraph or
   # UndirectedGraph.
-  class Graph
+  module Graph
 
     include Enumerable
     include Labels
 
-    def self.[](*a) self.new.from_array(*a); end
+    # usi#ng my helper:
+    #extends_host_with :ClassMethods
+    
+    #module ClassMethods
+      #def self.[](*a)
+        #puts self
+        #self.new.from_array(*a)
+      #end
+    #end
+    include InitArray
 
     def initialize(*params)
+      puts "trapped"
+      puts self
       raise ArgumentError if params.any? do |p| 
-        !(p.kind_of? Graphy::Graph or p.kind_of? Array or p.kind_of? Hash)
+        !(p.is_a? Graphy::Graph or p.is_a? Array or p.is_a? Hash)
       end
       args = params.last || {}
       class << self
         self
-      end.class_eval do
-        include( args[:implementation]       ? args[:implementation]       : AdjacencyGraph )
-        include( args[:algorithmic_category] ? args[:algorithmic_category] : Digraph        )
+      end.module_eval do
+        include(args[:implementation]       ? args[:implementation]       : AdjacencyGraph)
+        include(args[:algorithmic_category] ? args[:algorithmic_category] : Digraph       )
         include GraphAPI
       end
       implementation_initialize(*params)
@@ -31,10 +42,10 @@ module Graphy
     #  Example: Graphy::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s =>
     #    "(1-2)(2-3)(2-4)(4-5)"
     # 
-    # Or as a Hash for specifying lables
+    # Or as a Hash for specifying labels
     # Graphy::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (Note: Do not use for Multi or Pseudo graphs)
     def from_array(*a)
-      if a.size == 1 and a[0].kind_of? Hash
+      if a.size == 1 and a[0].is_a? Hash
         # Convert to edge class
         a[0].each do |k,v|
           #FIXME, edge class shouldn't be assume here!!!
@@ -45,8 +56,8 @@ module Graphy
           end 
         end
         #FIXME, edge class shouldn't be assume here!!!
-      elsif a[0].kind_of? Graphy::Arc
-        a.each{|e| add_edge!(e); self[e] = e.label}
+      elsif a[0].is_a? Graphy::Arc
+        a.each{ |e| add_edge!(e); self[e] = e.label}
       elsif a.size % 2 == 0    
         0.step(a.size-1, 2) {|i| add_edge!(a[i], a[i+1])}
       else
@@ -56,13 +67,13 @@ module Graphy
     end
 
     # Non destructive version of add_vertex!, returns modified copy of Graph
-    def add_vertex(v, l=nil)
+    def add_vertex(v, l = nil)
       x = self.class.new(self)
       x.add_vertex!(v,l)
     end
 
     # Non destructive version add_edge!, returns modified copy of Graph  
-    def add_edge(u, v=nil, l=nil)
+    def add_edge(u, v = nil, l = nil)
       x = self.class.new(self)
       x.add_edge!(u,v,l)
     end
@@ -75,7 +86,7 @@ module Graphy
     end
 
     # Non destructive version of remove_edge!, returns modified copy of Graph
-    def remove_edge(u,v=nil)
+    def remove_edge(u,v = nil)
       x = self.class.new(self)
       x.remove_edge!(u,v)
     end
@@ -92,9 +103,9 @@ module Graphy
       d = directed? ? (options[:direction] || :out) : :all
 
       # Discharge the easy ones first
-      return [x.source] if x.kind_of? Arc and options[:type] == :vertices and d == :in
-      return [x.target] if x.kind_of? Arc and options[:type] == :vertices and d == :out
-      return [x.source, x.target] if x.kind_of? Arc and options[:type] != :edges and d == :all
+      return [x.source] if x.is_a? Arc and options[:type] == :vertices and d == :in
+      return [x.target] if x.is_a? Arc and options[:type] == :vertices and d == :out
+      return [x.source, x.target] if x.is_a? Arc and options[:type] != :edges and d == :all
 
       (options[:type] == :edges ? edges : to_a).select {|u| adjacent?(x,u,d)}
     end
@@ -184,10 +195,10 @@ module Graphy
     # all adjacent objects in a graph to a given object. Here the concern is primarily on seeing
     # if two objects touch. For vertexes, any edge between the two will usually do, but the direction
     # can be specified if need be.
-    def adjacent?(source, target, direction=:all)
-      if source.kind_of? Graphy::Arc
+    def adjacent?(source, target, direction = :all)
+      if source.is_a? Graphy::Arc
         raise NoArcError unless edge? source
-        if target.kind_of? Graphy::Arc
+        if target.is_a? Graphy::Arc
           raise NoArcError unless edge? target
           (direction != :out and source.source == target.target) or (direction != :in and source.target == target.source)
         else
@@ -196,7 +207,7 @@ module Graphy
         end
       else
         raise NoVertexError unless vertex? source
-        if target.kind_of? Graphy::Arc
+        if target.is_a? Graphy::Arc
           raise NoArcError unless edge? target
           (direction != :out and source == target.target) or (direction != :in and source == target.source)
         else
@@ -207,7 +218,7 @@ module Graphy
     end
 
     # Returns true if the graph has no vertex, i.e. num_vertices == 0.
-    def empty?()
+    def empty?
       vertices.size.zero?
     end
 
@@ -264,7 +275,7 @@ module Graphy
     # Returns the number of in-edges (for directed graphs) or the number of
     # incident edges (for undirected graphs) of vertex _v_.
     def in_degree(v)
-      adjacent(v, :direction => :in ).size
+      adjacent(v, :direction => :in).size
     end
 
     # Returns the sum of the number in and out edges for a vertex
@@ -273,59 +284,59 @@ module Graphy
     end
 
     # Minimum in-degree 
-    def min_in_degree()
+    def min_in_degree
       to_a.map {|v| in_degree(v)}.min
     end
 
     # Minimum out-degree
-    def min_out_degree()
+    def min_out_degree
       to_a.map {|v| out_degree(v)}.min
     end
 
     # Minimum degree of all vertexes
-    def min_degree()
+    def min_degree
       [min_in_degree, min_out_degree].min
     end
 
     # Maximum in-degree 
-    def max_in_degree()
+    def max_in_degree
       vertices.map { |v| in_degree(v)}.max
     end
 
     # Maximum out-degree
-    def max_out_degree()
+    def max_out_degree
       vertices.map { |v| out_degree(v)}.max
     end
 
     # Minimum degree of all vertexes
-    def max_degree()
+    def max_degree
       [max_in_degree, max_out_degree].max
     end
 
     # Regular
-    def regular?()
+    def regular?
       min_degree == max_degree
     end
 
     # Returns the number of vertices.
-    def size()
+    def size
       vertices.size
     end
 
     # Synonym for size.
-    def num_vertices()
+    def num_vertices
       vertices.size
     end
 
     # Returns the number of edges.
-    def num_edges()
+    def num_edges
       edges.size
     end
 
     # Utility method to show a string representation of the edges of the graph.
-    def to_s()
-      edges.to_s
-    end
+    #def to_s
+      #edges.to_s
+    #end
 
     # Equality is defined to be same set of edges and directed?
     def eql?(g)
@@ -394,10 +405,11 @@ module Graphy
       end;
     end
 
-    def inspect
-      l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
-      self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
-    end
+    #def inspect
+      #puts self.inspect
+      ##l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
+      ##self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
+    #end
 
     private
 

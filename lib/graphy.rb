@@ -29,6 +29,14 @@
 require 'set'
 
 module Graphy
+  # ruby stdlib extensions
+  require 'ext/ext'
+  # ruby 1.8.x/1.9.x compatibility
+  require 'graphy/ruby_compatibility'
+
+  require 'graphy/helpers'
+  
+  # Graphy internals
   autoload :AdjacencyGraph,      'graphy/adjacency_graph'
   autoload :Arc,                 'graphy/arc'
   autoload :ArcNumber,           'graphy/arc_number'

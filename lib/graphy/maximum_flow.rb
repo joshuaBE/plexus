@@ -1,6 +1,7 @@
 module Graphy
 
-  class Network < Digraph
+  class Network
+    include Digraph
     attr_accessor :lower, :upper, :cost, :flow
 
     def residual(residual_capacity, cost_property, zero = 0)

@@ -69,7 +69,7 @@ insertion and removal at the cost of extra space overhead, etc.
 
 Using IRB, first require the library:
 
-    $ irb
+    require 'rubygems' # only if you are using ruby 1.8.x
     require 'graphy'
 
 If you'd like to include all the classes in the current scope (so you

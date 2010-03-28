@@ -5,16 +5,16 @@ module Graphy
   # class and implemeting the minimum methods needed to
   # make it work. This is a good example to look
   # at for making one's own graph classes.
-  class Cycle
+  module Cycle
     def initialize(n)
       @size = n;
     end
 
-    def directed?()
+    def directed?
       false
     end
 
-    def vertices()
+    def vertices
       (1..@size).to_a
     end
 
@@ -27,7 +27,7 @@ module Graphy
       vertex?(u) && vertex?(v) && ((v-u == 1) or (u == @size && v = 1))
     end
 
-    def edges()
+    def edges
       Array.new(@size) { |i| Graphy::Edge[i+1, (i+1) == @size ? 1 : i+2]}
     end
   end # Cycle
@@ -37,7 +37,7 @@ module Graphy
   # class and implemeting the minimum methods needed to
   # make it work. This is a good example to look
   # at for making one's own graph classes.
-  class Complete < Cycle
+  module Complete < Cycle
     def initialize(n)
       @size = n
       @edges = nil

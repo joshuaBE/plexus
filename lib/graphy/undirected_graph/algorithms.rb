@@ -1,7 +1,5 @@
 module Graphy
-
-  class UndirectedGraph
-
+  module UndirectedGraph
     module Algorithms
       
       include Search
@@ -88,7 +86,5 @@ module Graphy
       end
       
     end # UndirectedGraphAlgorithms
-
-  end
-
-end
+  end # UndirectedGraph
+end # Graphy
