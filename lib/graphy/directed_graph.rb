@@ -3,7 +3,7 @@ module Graphy
   class DirectedGraph < Graph
     
     autoload :Algorithms, "graphy/directed_graph/algorithms"
-    autoload :Distance, "graphy/directed_graph/distance"    
+    autoload :Distance,   "graphy/directed_graph/distance"    
     
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
