@@ -68,7 +68,7 @@ module Graphy
   autoload :UndirectedMultiGraph,         'graphy/classes/graph_classes'
 
   # ruby stdlib extensions
-  require 'ext/ext'
+  require 'graphy/ext'
   # ruby 1.8.x/1.9.x compatibility
   require 'graphy/ruby_compatibility'
 end
