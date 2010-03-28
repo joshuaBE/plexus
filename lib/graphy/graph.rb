@@ -26,8 +26,8 @@ module Graphy
       class << self
         self
       end.module_eval do
-        include(args[:implementation]       ? args[:implementation]       : AdjacencyGraph)
-        include(args[:algorithmic_category] ? args[:algorithmic_category] : Digraph       )
+        include(args[:implementation]       ? args[:implementation]       : AdjacencyGraphBuilder)
+        include(args[:algorithmic_category] ? args[:algorithmic_category] : DigraphBuilder       )
         include GraphAPI
       end
       implementation_initialize(*params)
