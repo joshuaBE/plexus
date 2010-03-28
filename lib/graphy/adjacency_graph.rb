@@ -16,7 +16,10 @@ module Graphy
     def implementation_initialize(*params)
       @vertex_dict     = Hash.new    
       clear_all_labels
-      
+
+      # FIXME: could definitely make use of the activesupport helper
+      # extract_options! and facets' reverse_merge! technique
+      # to handle parameters
       args = (params.pop if params.last.kind_of? Hash) || {}
 
       # Basic configuration of adjacency
@@ -47,11 +50,11 @@ module Graphy
     end
 
     # Returns true if v is a vertex of this Graph
-    # An O(1) implementation of vertex?
+    # (an "O(1)" implementation of vertex?)
     def vertex?(v) @vertex_dict.has_key?(v); end
 
     # Returns true if [u,v] or u is an Arc
-    # An O(1) implementation 
+    # (an "O(1)" implementation of edge?)
     def edge?(u, v=nil)
       u, v = u.source, u.target if u.kind_of? Graphy::Arc
       vertex?(u) and @vertex_dict[u].include?(v)
@@ -86,7 +89,7 @@ module Graphy
 
     # Removes a given vertex from the graph
     def remove_vertex!(v)
-# FIXME This is broken for multi graphs 
+      # FIXME This is broken for multi graphs 
       @vertex_dict.delete(v)
       @vertex_dict.each_value { |adjList| adjList.delete(v) }
       @vertex_dict.keys.each  do |u| 
@@ -137,8 +140,8 @@ module Graphy
         end; a
       end.to_a
     end
- 
-# FIXME, EFFED UP
+
+    # FIXME, EFFED UP
     def adjacent(x, options={})
       options[:direction] ||= :out
       if !x.kind_of?(Graphy::Arc) and (options[:direction] == :out || !directed?)
