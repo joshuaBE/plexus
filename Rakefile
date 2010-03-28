@@ -55,6 +55,6 @@ end
 #task :default => :spec
 
 YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb', 'README.markdown', 'TODO.markdown', 'CREDITS.markdown', 'LICENSE', 'VERSION']
+  t.files   = ['lib/**/*.rb', 'README.md', 'TODO.md', 'CREDITS.md', 'LICENSE', 'VERSION']
   #t.options = ['--any', '--extra', '--opts'] # optional
 end
