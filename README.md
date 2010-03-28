@@ -1,7 +1,4 @@
-Graphy: A Graph Theory Library for Ruby
-=======================================
-
-**A framework for graph data structures and algorithms.**
+# Graphy. A framework for graph theory, graph data structures and associated algorithms.
 
 Graph algorithms currently provided are:
 
@@ -93,7 +90,7 @@ A few properties of the graph we just created:
     >> dg.edge?(4,2)
     => false
     >> dg.vertices
-    => [5, 6, 1, 2, 3, 4]
+    => [1, 2, 3, 4, 5, 6]
 
 Every object could be a vertex, even the class object `Object`:
 

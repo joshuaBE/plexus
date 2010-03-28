@@ -18,6 +18,13 @@ module Graphy
     end
     
     def initialize(*params)
+      # FIXME/TODO: setting args to the hash or {} while getting rid
+      # on the previous parameters prevents from passing another
+      # graph to the initializer, so you cannot do things like:
+      # UndirectedGraph.new(Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6])
+      # As args must be a hash, if we're to allow such syntax,
+      # we should provide a way to handle the graph as a hash
+      # member.
       args = (params.pop if params.last.kind_of? Hash) || {}
       args[:algorithmic_category] = DirectedGraphBuilder::Algorithms    
       super *(params << args)

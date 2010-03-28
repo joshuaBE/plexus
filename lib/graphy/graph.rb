@@ -16,11 +16,24 @@ module Graphy
     #end
     # after the class->module transition, has been moved at implementation level,
     # using a helper (extends_host)
+    extends_host
+    module ClassMethods
+      def [](*a)
+        self.new.from_array(*a)
+      end
+    end
 
     # Create a graph.
     def initialize(*params)
-      raise ArgumentError if params.any? do |p| 
-        !(p.is_a? Graphy::Graph or p.is_a? Array or p.is_a? Hash)
+      puts params.inspect
+      params.each {|p| puts "#{p.inspect} (#{p.class})"}
+      puts
+      raise ArgumentError if params.any? do |p|
+        # FIXME: checking wether it's a GraphBuilder (module) is not sufficient
+        # and the is_a? redefinition trick (instance_evaling) should be
+        # completed by a clever way to check the actual class of p.
+        # Maybe using ObjectSpace to get the available Graph classes?
+        !(p.is_a? Graphy::GraphBuilder or p.is_a? Array or p.is_a? Hash)
       end
       args = params.last || {}
       class << self
@@ -292,8 +305,6 @@ module Graphy
 
     # Minimum degree of all vertexes
     def min_degree
-      puts "---"
-      puts self
       [min_in_degree, min_out_degree].min
     end
 
@@ -314,7 +325,6 @@ module Graphy
 
     # Regular
     def regular?
-      puts self
       min_degree == max_degree
     end
 
@@ -405,11 +415,21 @@ module Graphy
       end;
     end
 
-    #def inspect
-      #puts self.inspect
-      ##l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
-      ##self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
-    #end
+    def inspect
+      # FIXME: broken, it's not updated. The issue's not with inspect, but it's worth mentionning here.
+      # Example:
+      #     dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
+      #     dg.add_vertices! 1, 5, "yosh"
+      #     # => Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
+      #     dg.vertex?("yosh")
+      #     # => true
+      #     dg
+      #     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]] 
+      # the new vertex doesn't show up.
+      # Actually this version of inspect is far too verbose IMO :)
+      l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
+      self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
+    end
 
     private
 

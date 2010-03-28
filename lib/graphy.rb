@@ -30,6 +30,11 @@ require 'set'
 
 module Graphy
   # Graphy internals: graph builders and additionnal behaviors
+  autoload :GraphAPI,                     'graphy/graph_api'
+
+  autoload :GraphBuilder,                 'graphy/graph'
+  autoload :AdjacencyGraphBuilder,        'graphy/adjacency_graph'
+
   autoload :DirectedGraphBuilder,         'graphy/directed_graph'
   autoload :DigraphBuilder,               'graphy/directed_graph'
   autoload :DirectedPseudoGraphBuilder,   'graphy/directed_graph'
@@ -39,7 +44,6 @@ module Graphy
   autoload :UndirectedPseudoGraphBuilder, 'graphy/undirected_graph'
   autoload :UndirectedMultiGraphBuilder,  'graphy/undirected_graph'
 
-  autoload :AdjacencyGraphBuilder,        'graphy/adjacency_graph'
   autoload :Arc,                          'graphy/arc'
   autoload :ArcNumber,                    'graphy/arc_number'
   autoload :Biconnected,                  'graphy/biconnected'
@@ -49,8 +53,6 @@ module Graphy
   
   autoload :Dot,                          'graphy/dot'
   autoload :Edge,                         'graphy/edge'
-  autoload :GraphBuilder,                 'graphy/graph'
-  autoload :GraphAPI,                     'graphy/graph_api'
   autoload :Labels,                       'graphy/labels'
   autoload :MaximumFlow,                  'graphy/maximum_flow'
   #autoload :Rdot,                        'graphy/dot'
