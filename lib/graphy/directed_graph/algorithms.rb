@@ -9,9 +9,9 @@ module Graphy
   # DirectedPseudoGraph is a class that allows for parallel edges, and
   # DirectedMultiGraph is a class that allows for parallel edges and loops
   # as well.
-  module DirectedGraph
+  module DirectedGraphBuilder
     module Algorithms
-      
+
       include Search
       include StrongComponents
       include Distance
@@ -31,7 +31,7 @@ module Graphy
       def edge_class
         @parallel_edges ? Graphy::MultiArc : Graphy::Arc
       end
-      
+
       # Reverse all edges in a graph
       #
       # @return [DirectedGraph] a copy of the receiver for which the direction of edges has
@@ -51,19 +51,19 @@ module Graphy
         re = e.map { |x| x.reverse}
         not e.any? { |x| re.include?(x)}
       end
-      
+
       # Balanced is when the out edge count is equal to the in edge count
       #
       # @return [Boolean]
       def balanced?(v)
         out_degree(v) == in_degree(v)
       end
-      
+
       # Returns out_degree(v) - in_degree(v)
       def delta(v)
         out_degree(v) - in_degree(v)
       end
-      
+
       def community(node, direction)
         nodes, stack = {}, adjacent(node, :direction => direction)
         while n = stack.pop
@@ -74,7 +74,7 @@ module Graphy
         end
         nodes.values
       end
-      
+
       def descendants(node)
         community(node, :out)
       end
@@ -88,5 +88,5 @@ module Graphy
       end    
 
     end # Algorithms
-  end # DirectedGraph
+  end # DirectedGraphBuilder
 end # Graphy

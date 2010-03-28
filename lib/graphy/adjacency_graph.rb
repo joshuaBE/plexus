@@ -4,7 +4,7 @@ module Graphy
   # UndirectedGraph, PseudoGraph, DirectedPseudoGraph, MultiGraph and
   # DirectedPseudoGraph classes, through Graph, under the control of
   # the GraphAPI.
-  module AdjacencyGraph
+  module AdjacencyGraphBuilder
 
     class ArrayWithAdd < Array # :nodoc:
       alias add push

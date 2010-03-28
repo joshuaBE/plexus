@@ -5,11 +5,11 @@ module Graphy
   # object can be a vertex of a graph.
   #
   # Arc's base is a Struct with a :source, a :target and a :label
-  Struct.new("ArcBase",:source, :target, :label)
+  Struct.new("ArcBase", :source, :target, :label)
 
   class Arc < Struct::ArcBase
 
-    def initialize(p_source,p_target,p_label=nil)
+    def initialize(p_source, p_target, p_label = nil)
       super(p_source, p_target, p_label)
     end
 
@@ -42,10 +42,10 @@ module Graphy
     
     def inspect() "#{self.class.to_s}[#{source.inspect},#{target.inspect},#{label.inspect}]"; end
     
-  end
+  end # Arc
   
   class MultiArc < Arc
     include ArcNumber
   end
-  
-end
+
+end # Graphy

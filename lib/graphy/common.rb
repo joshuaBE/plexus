@@ -5,7 +5,7 @@ module Graphy
   # class and implemeting the minimum methods needed to
   # make it work. This is a good example to look
   # at for making one's own graph classes.
-  module Cycle
+  module CycleBuilder
     def initialize(n)
       @size = n;
     end
@@ -30,14 +30,14 @@ module Graphy
     def edges
       Array.new(@size) { |i| Graphy::Edge[i+1, (i+1) == @size ? 1 : i+2]}
     end
-  end # Cycle
-  
+  end # CycleBuilder
+
   # This class defines a complete graph of size n.
   # This is easily done by using the base Graph
   # class and implemeting the minimum methods needed to
   # make it work. This is a good example to look
   # at for making one's own graph classes.
-  module Complete < Cycle
+  module CompleteBuilder < CycleBuilder
     def initialize(n)
       @size = n
       @edges = nil
@@ -56,6 +56,6 @@ module Graphy
       u, v = [u.source, v.target] if u.kind_of? Graphy::Arc
       vertex?(u) && vertex?(v)
     end
+  end # CompleteBuilder
 
-  end # Complete
 end # Graphy

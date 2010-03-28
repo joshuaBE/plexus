@@ -1,6 +1,10 @@
 module Graphy
-  module Graph
- 
+  module Dot
+
+    #FIXME: don't really understood where we stand with the dot generators.
+    # RDoc ships with a dot.rb which seems pretty efficient.
+    # Are these helpers still needed, and if not, how should we replace them?
+
     # Return a DOT::DOTDigraph for directed graphs or a DOT::DOTSubgraph for an
     # undirected Graph.  _params_ can contain any graph property specified in
     # rdot.rb. If an edge or vertex label is a kind of Hash then the keys
@@ -29,7 +33,7 @@ module Graphy
       end
       graph
     end
-    
+
     # Output the dot format as a string
     def to_dot (params={}) to_dot_graph(params).to_s; end
 
@@ -45,12 +49,12 @@ module Graphy
     def write_to_graphic_file (fmt='png', dotfile='graph')
       src = dotfile + '.dot'
       dot = dotfile + '.' + fmt
-      
+
       File.open(src, 'w') {|f| f << self.to_dot << "\n"}
-      
+
       system( "dot -T#{fmt} #{src} -o #{dot}" )
       dot
     end
 
-  end                           # module Graph
-end                             # module Graphy
+  end # Dot
+end # module Graphy

@@ -1,5 +1,4 @@
 module Graphy
-
   module ChinesePostman    
 
     # Returns the shortest walk that traverses all arcs at least
@@ -13,8 +12,8 @@ module Graphy
       cp_euler_circuit(start, f, path)
     end
 
-  private
- 
+    private
+
     def cp_euler_circuit(start, f, path) # :nodoc:
       circuit = [u=v=start]
       bridge_taken = Hash.new {|h,k| h[k] = Hash.new}
@@ -32,7 +31,7 @@ module Graphy
         u=v
       end; circuit
     end
- 
+
     def cp_cancel_cycle(cost, path, f, start, zero) # :nodoc:
       u = start; k = nil
       begin
@@ -46,7 +45,7 @@ module Graphy
       end until (u=v) != start
       true # This routine always returns true to make cp_improve easier
     end
-  
+
     def cp_improve(f, positive, negative, cost, zero) # :nodoc:
       residual = self.class.new
       negative.each do |u|
@@ -59,7 +58,7 @@ module Graphy
       i = residual.vertices.detect {|v| r_cost[v][v] and r_cost[v][v] < zero}
       i ? cp_cancel_cycle(r_cost, r_path, f, i) : false
     end
-  
+
     def cp_find_feasible(delta, positive, negative, zero) # :nodoc:
       f = Hash.new {|h,k| h[k] = Hash.new}
       negative.each do |i|
@@ -70,7 +69,7 @@ module Graphy
         end
       end; f
     end
- 
+
     def cp_valid_least_cost?(c, zero) # :nodoc:
       vertices.each do |i|
         vertices.each do |j|
@@ -78,7 +77,7 @@ module Graphy
         end
       end; true
     end
-  
+
     def cp_unbalanced(delta) # :nodoc:
       negative = []; positive = []
       vertices.each do |v|
@@ -89,4 +88,4 @@ module Graphy
 
   end # Chinese Postman
 end # Graphy
-  
+

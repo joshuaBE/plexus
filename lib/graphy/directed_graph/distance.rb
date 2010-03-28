@@ -1,5 +1,5 @@
 module Graphy
-  module DirectedGraph
+  module DirectedGraphBuilder
     module Distance
       
       # Shortest path from Jorgen Band-Jensen and Gregory Gutin,

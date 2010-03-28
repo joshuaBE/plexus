@@ -4,25 +4,21 @@ module Graphy
   # basic functions of a Graph class by using only functions in GraphAPI.
   # An actual implementation still needs to be done, as in Digraph or
   # UndirectedGraph.
-  module Graph
+  module GraphBuilder
 
     include Enumerable
     include Labels
+    include Dot
 
-    # usi#ng my helper:
-    #extends_host_with :ClassMethods
-    
-    #module ClassMethods
-      #def self.[](*a)
-        #puts self
-        #self.new.from_array(*a)
-      #end
+    #def self.[](*a)
+      #puts self
+      #self.new.from_array(*a)
     #end
-    include InitArray
+    # after the class->module transition, has been moved at implementation level,
+    # using a helper (extends_host)
 
+    # Create a graph.
     def initialize(*params)
-      puts "trapped"
-      puts self
       raise ArgumentError if params.any? do |p| 
         !(p.is_a? Graphy::Graph or p.is_a? Array or p.is_a? Hash)
       end
@@ -285,7 +281,8 @@ module Graphy
 
     # Minimum in-degree 
     def min_in_degree
-      to_a.map {|v| in_degree(v)}.min
+      return nil if to_a.empty?
+      to_a.map { |v| in_degree(v)}.min
     end
 
     # Minimum out-degree
@@ -295,6 +292,8 @@ module Graphy
 
     # Minimum degree of all vertexes
     def min_degree
+      puts "---"
+      puts self
       [min_in_degree, min_out_degree].min
     end
 
@@ -315,6 +314,7 @@ module Graphy
 
     # Regular
     def regular?
+      puts self
       min_degree == max_degree
     end
 

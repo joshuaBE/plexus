@@ -15,7 +15,6 @@ module Graphy
     # from each other.
     #
     def strong_components
-
       dfs_num    = 0
       stack = []; result = []; root = {}; comp = {}; number = {}
 
@@ -49,7 +48,7 @@ module Graphy
       dfs({:enter_vertex => enter, :exit_vertex => exit}); result
 
     end # strong_components
-    
+
     # Returns a condensation graph of the strongly connected components
     # Each node is an array of nodes from the original graph
     def condensation

@@ -34,42 +34,54 @@ module Graphy
   # ruby 1.8.x/1.9.x compatibility
   require 'graphy/ruby_compatibility'
 
-  require 'graphy/helpers'
+  # Graphy internals: graph builders and additionnal behaviors
+  autoload :AdjacencyGraphBuilder,        'graphy/adjacency_graph'
+  autoload :Arc,                          'graphy/arc'
+  autoload :ArcNumber,                    'graphy/arc_number'
+  autoload :Biconnected,                  'graphy/biconnected'
+  autoload :ChinesePostman,               'graphy/chinese_postman'
+  autoload :Common,                       'graphy/common'
+  autoload :Comparability,                'graphy/comparability'
   
-  # Graphy internals
-  autoload :AdjacencyGraph,      'graphy/adjacency_graph'
-  autoload :Arc,                 'graphy/arc'
-  autoload :ArcNumber,           'graphy/arc_number'
-  autoload :Biconnected,         'graphy/biconnected'
-  autoload :ChinesePostman,      'graphy/chinese_postman'
-  autoload :Common,              'graphy/common'
-  autoload :Comparability,       'graphy/comparability'
+  autoload :DirectedGraphBuilder,         'graphy/directed_graph'
+  autoload :DigraphBuilder,               'graphy/directed_graph'
+  autoload :DirectedPseudoGraphBuilder,   'graphy/directed_graph'
+  autoload :DirectedMultiGraphBuilder,    'graphy/directed_graph'
   
-  autoload :DirectedGraph,       'graphy/directed_graph'
-  autoload :Digraph,             'graphy/directed_graph'
-  autoload :DirectedPseudoGraph, 'graphy/directed_graph'
-  autoload :DirectedMultiGraph,  'graphy/directed_graph'
-  
-  autoload :Dot,                 'graphy/dot'
-  autoload :Edge,                'graphy/edge'
-  autoload :Graph,               'graphy/graph'
-  autoload :GraphAPI,            'graphy/graph_api'
-  autoload :Labels,              'graphy/labels'
-  autoload :MaximumFlow,         'graphy/maximum_flow'
-  autoload :Rdot,                'graphy/rdot'
-  autoload :Search,              'graphy/search'
-  autoload :StrongComponents,    'graphy/strong_components'
-  autoload :UndirectedGraph,     'graphy/undirected_graph'
+  autoload :Dot,                          'graphy/dot'
+  autoload :Edge,                         'graphy/edge'
+  autoload :GraphBuilder,                 'graphy/graph'
+  autoload :GraphAPI,                     'graphy/graph_api'
+  autoload :Labels,                       'graphy/labels'
+  autoload :MaximumFlow,                  'graphy/maximum_flow'
+  #autoload :Rdot,                        'graphy/dot'
+  autoload :Search,                       'graphy/search'
+  autoload :StrongComponents,             'graphy/strong_components'
+
+  autoload :UndirectedGraphBuilder,       'graphy/undirected_graph'
+  autoload :UndirectedPseudoGraphBuilder, 'graphy/undirected_graph'
+  autoload :UndirectedMultiGraphBuilder,  'graphy/undirected_graph'
+
+  # Graphy classes
+  autoload :AdjacencyGraph,               'graphy/classes/graph_classes'
+  autoload :DirectedGraph,                'graphy/classes/graph_classes'
+  autoload :Digraph,                      'graphy/classes/graph_classes'
+  autoload :DirectedPseudoGraph,          'graphy/classes/graph_classes'
+  autoload :DirectedMultiGraph,           'graphy/classes/graph_classes'
+  autoload :UndirectedGraph,              'graphy/classes/graph_classes'
+  autoload :UndirectedPseudoGraph,        'graphy/classes/graph_classes'
+  autoload :UndirectedMultiGraph,         'graphy/classes/graph_classes'
 end
 
 # Vendored libraries
 
 require 'pathname'
-
 path = Pathname.new(__FILE__)
 $LOAD_PATH.unshift(path + '../../vendor')
 $LOAD_PATH.unshift(path + '../../vendor/priority-queue/lib')
 
 require 'rdot'
+
 require 'priority_queue/ruby_priority_queue'
 PriorityQueue = RubyPriorityQueue
+

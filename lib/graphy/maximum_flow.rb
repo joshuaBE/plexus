@@ -1,7 +1,7 @@
 module Graphy
-
   class Network
-    include Digraph
+    include DigraphBuilder
+
     attr_accessor :lower, :upper, :cost, :flow
 
     def residual(residual_capacity, cost_property, zero = 0)
@@ -17,15 +17,15 @@ module Graphy
       end
       r
     end
-        
+
     def maximum_flow() eliminate_lower_bounds.maximum_flow_prime.restore_lower_bounds(self); end
-    
-   private:
+
+    private
 
     def eliminate_lower_bounds
       no_lower_bounds = Digraph.new(self)
       if self.upper.kind_of? Proc then
-         no_lower_bounds.upper = Proc.new {|e| self.upper.call(e) - property(e,self.lower) }
+        no_lower_bounds.upper = Proc.new {|e| self.upper.call(e) - property(e,self.lower) }
       else
         no_lower_bounds.edges.each {|e| no_lower_bounds[e][self.upper] -= property(e,self.lower)}
       end
@@ -33,19 +33,16 @@ module Graphy
     end
 
     def restore_lower_bounds(src)
-      src.edges.each do {|e| (src.flow ? src[e][src.flow] : src[e]) = property(e,self.flow) + src.property(e,self.lower) }
+      src.edges.each { |e| (src.flow ? src[e][src.flow] : src[e]) = property(e,self.flow) + src.property(e,self.lower) }
       src
     end
-   
+
     def maximum_flow_prime
     end
-    
-  end
+  end # Network
 
-  module Graph
-
+  module GraphBuilder
     module MaximumFlow
-
       # Maximum flow, it returns an array with the maximum flow and a hash of flow per edge
       # Currently a highly inefficient implementation, FIXME, This should use Goldberg and Tarjan's method.
       def maximum_flow(s, t, capacity = nil, zero = 0)
@@ -69,10 +66,10 @@ module Graphy
           end
           total += amt
         end
-        
+
         [total, flow]
       end
 
     end # MaximumFlow
-  end # Graph
+  end # GraphBuilder
 end # Graphy
