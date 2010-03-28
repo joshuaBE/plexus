@@ -20,13 +20,17 @@ module Graphy
       # A directed graph is directed by definition
       #
       # @return [Boolean] always true
-      def directed?() true; end
+      def directed?()
+        true
+      end
 
       # A digraph uses the Arc class for edges
       #
       # @return [Graphy::MultiArc, Graphy::Arc] `Graphy::MultiArc` if the graph allows for parallel edges,
       #   `Graphy::Arc` otherwise.
-      def edge_class() @parallel_edges ? Graphy::MultiArc : Graphy::Arc; end
+      def edge_class()
+        @parallel_edges ? Graphy::MultiArc : Graphy::Arc
+      end
       
       # Reverse all edges in a graph
       #
@@ -34,7 +38,7 @@ module Graphy
       #   been inverted.
       def reversal
         result = self.class.new
-        edges.inject(result) {|a,e| a << e.reverse}
+        edges.inject(result) { |a,e| a << e.reverse}
         vertices.each { |v| result.add_vertex!(v) unless result.vertex?(v) }
         result
       end
@@ -44,17 +48,21 @@ module Graphy
       # @return [Boolean]
       def oriented?
         e = edges
-        re = e.map {|x| x.reverse}
-        not e.any? {|x| re.include?(x)}
+        re = e.map { |x| x.reverse}
+        not e.any? { |x| re.include?(x)}
       end
       
       # Balanced is when the out edge count is equal to the in edge count
       #
       # @return [Boolean]
-      def balanced?(v) out_degree(v) == in_degree(v); end
+      def balanced?(v)
+        out_degree(v) == in_degree(v)
+      end
       
       # Returns out_degree(v) - in_degree(v)
-      def delta(v) out_degree(v) - in_degree(v); end
+      def delta(v)
+        out_degree(v) - in_degree(v)
+      end
       
       def community(node, direction)
         nodes, stack = {}, adjacent(node, :direction => direction)
@@ -67,9 +75,17 @@ module Graphy
         nodes.values
       end
       
-      def descendants(node) community(node, :out); end
-      def ancestors(node)   community(node, :in ); end
-      def family(node)      community(node, :all); end    
+      def descendants(node)
+        community(node, :out)
+      end
+
+      def ancestors(node)
+        community(node, :in)
+      end
+
+      def family(node)
+        community(node, :all)
+      end    
 
     end # Algorithms
   end # DirectedGraph

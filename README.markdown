@@ -3,8 +3,6 @@ Graphy: A Graph Theory Library for Ruby
 
 **A framework for graph data structures and algorithms.**
 
-This library is based on [GRATR][1] (itself a fork of [RGL][2]).
-
 Graph algorithms currently provided are:
 
 * Topological Sort
@@ -156,7 +154,7 @@ Look for more in the examples directory.
 ## History
 
 This library is based on [GRATR][1] by Shawn Garbett (itself a fork of
-Horst Duchene's RGL library) which is heavily influenced by the Boost
+Horst Duchene's [RGL][2] library) which is heavily influenced by the [Boost][3]
 Graph Library (BGL).
 
 This fork attempts to modernize and extend the API and tests.
@@ -188,3 +186,4 @@ See LICENSE
 [2]: http://rgl.rubyforge.org
 [3]: http://www.boost.org/libs/graph/doc
 [4]: http://www.nist.gov/dads/HTML/graph.html
+

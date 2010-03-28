@@ -20,15 +20,16 @@ module Graphy
       # distance. A missing vertex from the hash is an infinite distance
       #
       # Complexity O(n+m)
-      def shortest_path(start, weight=nil, zero=0)
-        dist = {start => zero}; path = {}
+      def shortest_path(start, weight = nil, zero = 0)
+        dist = {start => zero}
+        path = {}
         topsort(start) do |vi|
           next if vi == start
-          dist[vi],path[vi] = adjacent(vi, :direction => :in).map do |vj|
+          dist[vi], path[vi] = adjacent(vi, :direction => :in).map do |vj|
             [dist[vj] + cost(vj,vi,weight), vj] 
-          end.min {|a,b| a[0] <=> b[0]}
+          end.min { |a,b| a[0] <=> b[0]}
         end; 
-        dist.keys.size == vertices.size ? [dist,path] : nil
+        dist.keys.size == vertices.size ? [dist, path] : nil
       end # shortest_path    
       
       # Algorithm from Jorgen Band-Jensen and Gregory Gutin,
@@ -53,18 +54,20 @@ module Graphy
       #
       # O(n*log(n) + m) complexity
       def dijkstras_algorithm(s, weight = nil, zero = 0)
-        q = vertices; distance = { s => zero }; path = {}
+        q = vertices; distance = { s => zero }
+        path = {}
         while not q.empty?
-          v = (q & distance.keys).inject(nil) {|a,k| (!a.nil?) && (distance[a] < distance[k]) ? a : k} 
+          v = (q & distance.keys).inject(nil) { |a,k| (!a.nil?) && (distance[a] < distance[k]) ? a : k} 
           q.delete(v)
           (q & adjacent(v)).each do |u|
             c = cost(v,u,weight)
-            if distance[u].nil? or distance[u] > (c+distance[v])
+            if distance[u].nil? or distance[u] > (c + distance[v])
               distance[u] = c + distance[v]
               path[u] = v
             end
           end
-        end; [distance, path]
+        end
+        [distance, path]
       end # dijkstras_algorithm
 
       # Algorithm from Jorgen Band-Jensen and Gregory Gutin,
@@ -88,19 +91,21 @@ module Graphy
       #
       # O(nm) complexity   
       def bellman_ford_moore(start, weight = nil, zero = 0)
-        distance = { start => zero }; path = {}
+        distance = { start => zero }
+        path = {}
         2.upto(vertices.size) do
           edges.each do |e|
-            u,v = e[0],e[1]
+            u, v = e[0], e[1]
             unless distance[u].nil?
-              c = cost(u, v, weight)+distance[u]
+              c = cost(u, v, weight) + distance[u]
               if distance[v].nil? or c < distance[v]
                 distance[v] = c
                 path[v] = u
               end 
             end        
           end
-        end; [distance, path]
+        end
+        [distance, path]
       end # bellman_ford_moore
       
       # This uses the Floyd-Warshall algorithm to efficiently find
@@ -126,10 +131,10 @@ module Graphy
       # about the math system and fully functional duck typing.
       #
       # O(n^3) complexity in time.
-      def floyd_warshall(weight=nil, zero=0)
-        c     = Hash.new {|h,k| h[k] = Hash.new}
-        path  = Hash.new {|h,k| h[k] = Hash.new}
-        delta = Hash.new {|h,k| h[k] = 0}
+      def floyd_warshall(weight = nil, zero = 0)
+        c     = Hash.new { |h,k| h[k] = Hash.new}
+        path  = Hash.new { |h,k| h[k] = Hash.new}
+        delta = Hash.new { |h,k| h[k] = 0}
         edges.each do |e| 
           delta[e.source] += 1
           delta[e.target] -= 1
