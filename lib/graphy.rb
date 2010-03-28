@@ -29,12 +29,16 @@
 require 'set'
 
 module Graphy
-  # ruby stdlib extensions
-  require 'ext/ext'
-  # ruby 1.8.x/1.9.x compatibility
-  require 'graphy/ruby_compatibility'
-
   # Graphy internals: graph builders and additionnal behaviors
+  autoload :DirectedGraphBuilder,         'graphy/directed_graph'
+  autoload :DigraphBuilder,               'graphy/directed_graph'
+  autoload :DirectedPseudoGraphBuilder,   'graphy/directed_graph'
+  autoload :DirectedMultiGraphBuilder,    'graphy/directed_graph'
+
+  autoload :UndirectedGraphBuilder,       'graphy/undirected_graph'
+  autoload :UndirectedPseudoGraphBuilder, 'graphy/undirected_graph'
+  autoload :UndirectedMultiGraphBuilder,  'graphy/undirected_graph'
+
   autoload :AdjacencyGraphBuilder,        'graphy/adjacency_graph'
   autoload :Arc,                          'graphy/arc'
   autoload :ArcNumber,                    'graphy/arc_number'
@@ -42,11 +46,6 @@ module Graphy
   autoload :ChinesePostman,               'graphy/chinese_postman'
   autoload :Common,                       'graphy/common'
   autoload :Comparability,                'graphy/comparability'
-  
-  autoload :DirectedGraphBuilder,         'graphy/directed_graph'
-  autoload :DigraphBuilder,               'graphy/directed_graph'
-  autoload :DirectedPseudoGraphBuilder,   'graphy/directed_graph'
-  autoload :DirectedMultiGraphBuilder,    'graphy/directed_graph'
   
   autoload :Dot,                          'graphy/dot'
   autoload :Edge,                         'graphy/edge'
@@ -58,10 +57,6 @@ module Graphy
   autoload :Search,                       'graphy/search'
   autoload :StrongComponents,             'graphy/strong_components'
 
-  autoload :UndirectedGraphBuilder,       'graphy/undirected_graph'
-  autoload :UndirectedPseudoGraphBuilder, 'graphy/undirected_graph'
-  autoload :UndirectedMultiGraphBuilder,  'graphy/undirected_graph'
-
   # Graphy classes
   autoload :AdjacencyGraph,               'graphy/classes/graph_classes'
   autoload :DirectedGraph,                'graphy/classes/graph_classes'
@@ -71,6 +66,11 @@ module Graphy
   autoload :UndirectedGraph,              'graphy/classes/graph_classes'
   autoload :UndirectedPseudoGraph,        'graphy/classes/graph_classes'
   autoload :UndirectedMultiGraph,         'graphy/classes/graph_classes'
+
+  # ruby stdlib extensions
+  require 'ext/ext'
+  # ruby 1.8.x/1.9.x compatibility
+  require 'graphy/ruby_compatibility'
 end
 
 # Vendored libraries
