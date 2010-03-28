@@ -7,5 +7,5 @@ module Graphy
   class DirectedMultiGraph;    include DirectedMultiGraphBuilder;    end
   class UndirectedGraph;       include UndirectedGraphBuilder;       end
   class UndirectedPseudoGraph; include UndirectedPseudoGraphBuilder; end
-  class UndirectedMultiGraph;  include UndirectedMultiraphBuilder;   end
+  class UndirectedMultiGraph;  include UndirectedMultiGraphBuilder;  end
 end
