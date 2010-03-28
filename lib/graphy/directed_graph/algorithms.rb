@@ -1,16 +1,15 @@
 module Graphy
-  #
+
   # Digraph is a directed graph which is a finite set of vertices
   # and a finite set of edges connecting vertices. It cannot contain parallel
   # edges going from the same source vertex to the same target. It also
   # cannot contain loops, i.e. edges that go have the same vertex for source 
   # and target.
   #
-  # DirectedPseudoGraph is a class that allows for parallel edges, and a
+  # DirectedPseudoGraph is a class that allows for parallel edges, and
   # DirectedMultiGraph is a class that allows for parallel edges and loops
   # as well.
   class DirectedGraph
-
     module Algorithms
       
       include Search
@@ -19,12 +18,20 @@ module Graphy
       include ChinesePostman
 
       # A directed graph is directed by definition
+      #
+      # @return [Boolean] always true
       def directed?() true; end
 
       # A digraph uses the Arc class for edges
+      #
+      # @return [Graphy::MultiArc, Graphy::Arc] `Graphy::MultiArc` if the graph allows for parallel edges,
+      #   `Graphy::Arc` otherwise.
       def edge_class() @parallel_edges ? Graphy::MultiArc : Graphy::Arc; end
       
       # Reverse all edges in a graph
+      #
+      # @return [DirectedGraph] a copy of the receiver for which the direction of edges has
+      #   been inverted.
       def reversal
         result = self.class.new
         edges.inject(result) {|a,e| a << e.reverse}
@@ -32,7 +39,9 @@ module Graphy
         result
       end
 
-      # Return true if the Graph is oriented.
+      # Check whether the Graph is oriented or not.
+      #
+      # @return [Boolean]
       def oriented?
         e = edges
         re = e.map {|x| x.reverse}
@@ -40,6 +49,8 @@ module Graphy
       end
       
       # Balanced is when the out edge count is equal to the in edge count
+      #
+      # @return [Boolean]
       def balanced?(v) out_degree(v) == in_degree(v); end
       
       # Returns out_degree(v) - in_degree(v)
@@ -59,9 +70,7 @@ module Graphy
       def descendants(node) community(node, :out); end
       def ancestors(node)   community(node, :in ); end
       def family(node)      community(node, :all); end    
-      
-    end
 
-  end
-
-end
+    end # Algorithms
+  end # DirectedGraph
+end # Graphy

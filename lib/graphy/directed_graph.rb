@@ -10,7 +10,8 @@ module Graphy
       args[:algorithmic_category] = DirectedGraph::Algorithms    
       super *(params << args)
     end
-  end
+
+  end # DirectedGraph
   
   # DirectedGraph is just an alias for Digraph should one desire
   Digraph = DirectedGraph
@@ -18,20 +19,24 @@ module Graphy
   # This is a Digraph that allows for parallel edges, but does not
   # allow loops
   class DirectedPseudoGraph < DirectedGraph
+    
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
       args[:parallel_edges] = true
       super *(params << args)
-    end 
-  end
+    end
+
+  end # DirectedPseudoGraph
 
   # This is a Digraph that allows for parallel edges and loops
   class DirectedMultiGraph < DirectedPseudoGraph
+
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
       args[:loops] = true
       super *(params << args)
-    end 
-  end
+    end
 
-end
+  end # DirectedMultiGraph
+
+end # Graphy

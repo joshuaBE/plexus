@@ -39,19 +39,19 @@ Vertices can be any `Object`.
 There are a number of different graph types, each of which provide
 different features and constraints:
 
-`Graphy::Digraph` and it's pseudonym `Graphy::DirectedGraph`:
+`Graphy::Digraph` and its alias `Graphy::DirectedGraph`:
 
-* Single directed edges between vertices
+* Single directed edges (arcs) between vertices
 * Loops are forbidden
 
 `Graphy::DirectedPseudoGraph`:
 
-* Multiple directed edges between vertices
+* Multiple directed edges (arcs) between vertices
 * Loops are forbidden
 
 `Graphy::DirectedMultiGraph`:
 
-* Multiple directed edges between vertices
+* Multiple directed edges (arcs) between vertices
 * Loops on vertices
 
 `Graphy::UndirectedGraph`, `Graphy::UndirectedPseudoGraph`, and

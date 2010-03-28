@@ -1,7 +1,5 @@
 module Graphy
-
   class DirectedGraph
-    
     module Distance
       
       # Shortest path from Jorgen Band-Jensen and Gregory Gutin,
@@ -153,10 +151,8 @@ module Graphy
           end
         end
         [c, path, delta]
-      end # floyd_warshall
-      
+      end
+
     end # Distance
-    
-  end
-  
+  end # DirectedGraph
 end # Graphy
