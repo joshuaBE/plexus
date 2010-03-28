@@ -17,7 +17,10 @@ module Graphy
     #
     # @raise if the API is not completely implemented
     def self.included(klass)
-      [:directed?, :add_vertex!, :add_edge!, :remove_vertex!, :remove_edge!, :vertices, :edges, :edge_class].each do |meth| 
+      API_methods = [:directed?, :add_vertex!, :add_edge!, :remove_vertex!, :remove_edge!, :vertices, :edges, :edge_class]
+      ruby_18 { API_methods.each { |m| m.to_s } }
+      
+      API_methods.each do |meth| 
         raise "Must implement #{meth}" unless klass.instance_methods.include?(meth)
       end
 

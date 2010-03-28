@@ -42,16 +42,16 @@ module Graphy
   autoload :DirectedPseudoGraph, 'graphy/directed_graph'
   autoload :DirectedMultiGraph,  'graphy/directed_graph'
   
-  autoload :Dot,              'graphy/dot'
-  autoload :Edge,             'graphy/edge'
-  autoload :Graph,            'graphy/graph'
-  autoload :GraphAPI,         'graphy/graph_api'
-  autoload :Labels,           'graphy/labels'
-  autoload :MaximumFlow,      'graphy/maximum_flow'
-  autoload :Rdot,             'graphy/rdot'
-  autoload :Search,           'graphy/search'
-  autoload :StrongComponents, 'graphy/strong_components'
-  autoload :UndirectedGraph,  'graphy/undirected_graph'
+  autoload :Dot,                 'graphy/dot'
+  autoload :Edge,                'graphy/edge'
+  autoload :Graph,               'graphy/graph'
+  autoload :GraphAPI,            'graphy/graph_api'
+  autoload :Labels,              'graphy/labels'
+  autoload :MaximumFlow,         'graphy/maximum_flow'
+  autoload :Rdot,                'graphy/rdot'
+  autoload :Search,              'graphy/search'
+  autoload :StrongComponents,    'graphy/strong_components'
+  autoload :UndirectedGraph,     'graphy/undirected_graph'
 end
 
 # Vendored libraries
