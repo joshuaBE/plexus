@@ -1,9 +1,13 @@
 module Graphy
 
-  # Using the functions required by the GraphAPI, it implements all the
-  # basic functions of a Graph class by using only functions in GraphAPI.
-  # An actual implementation still needs to be done, as in Digraph or
-  # UndirectedGraph.
+  # Using the methods required by the {GraphAPI}, it implements all the
+  # *basic* functions of a {Graph} using *only* functions
+  # requested in {GraphAPI}. The process is under the control of the pattern
+  # {AdjacencyGraphBuilder}, unless a specific implementation is specified
+  # during initialization.
+  #
+  # An actual, complete implementation still needs to be done using this cheap result,
+  # hence {Digraph}, {UndirectedGraph} and their roomates.
   module GraphBuilder
 
     include Enumerable
@@ -23,11 +27,12 @@ module Graphy
       end
     end
 
-    # Create a graph.
+    # Create a generic graph.
+    #
+    # @param [Hash(Graphy::Graph, Array)] *params initialization parameters.
+    #   See {AdjacencyGraphBuilder#implementation_initialize} for more details.
+    # @return [Graph]
     def initialize(*params)
-      puts params.inspect
-      params.each {|p| puts "#{p.inspect} (#{p.class})"}
-      puts
       raise ArgumentError if params.any? do |p|
         # FIXME: checking wether it's a GraphBuilder (module) is not sufficient
         # and the is_a? redefinition trick (instance_evaling) should be
@@ -35,24 +40,34 @@ module Graphy
         # Maybe using ObjectSpace to get the available Graph classes?
         !(p.is_a? Graphy::GraphBuilder or p.is_a? Array or p.is_a? Hash)
       end
+
       args = params.last || {}
+
       class << self
         self
       end.module_eval do
+        # These inclusions trigger some validations checks by the way.
         include(args[:implementation]       ? args[:implementation]       : AdjacencyGraphBuilder)
         include(args[:algorithmic_category] ? args[:algorithmic_category] : DigraphBuilder       )
         include GraphAPI
       end
+
       implementation_initialize(*params)
     end     
 
-    # Shortcut for creating a Graph
+    # Shortcut for creating a Graph.
     #
-    #  Example: Graphy::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s =>
-    #    "(1-2)(2-3)(2-4)(4-5)"
+    # Using an arry of implicit {Arc}, specifying the vertices:
+    #
+    #     Graphy::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s
+    #     # => "(1-2)(2-3)(2-4)(4-5)"
     # 
-    # Or as a Hash for specifying labels
-    # Graphy::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (Note: Do not use for Multi or Pseudo graphs)
+    # Using a Hash for specifying labels along the way:
+    #
+    #     Graphy::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (note: do not use for Multi or Pseudo graphs)
+    #
+    # @param [Array, Hash] *a
+    # @return [Graph]
     def from_array(*a)
       if a.size == 1 and a[0].is_a? Hash
         # Convert to edge class
@@ -75,50 +90,69 @@ module Graphy
       self
     end
 
-    # Non destructive version of add_vertex!, returns modified copy of Graph
+    # Non destructive version of {AdjacencyGraphBuilder#add_vertex!} (works on a copy of the graph).
+    #
+    # @param [vertex] u
+    # @param [#to_s] l
+    # @return [Graph] a new graph with the supplementary vertex
     def add_vertex(v, l = nil)
       x = self.class.new(self)
       x.add_vertex!(v,l)
     end
 
-    # Non destructive version add_edge!, returns modified copy of Graph  
+    # Non destructive version {AdjacencyGraphBuilder#add_edge!} (works on a copy of the graph).
+    #
+    # @param [vertex] u
+    # @param [vertex] v
+    # @param [#to_s] l
+    # @return [Graph] a new graph with the supplementary edge
     def add_edge(u, v = nil, l = nil)
       x = self.class.new(self)
       x.add_edge!(u,v,l)
     end
     alias add_arc add_edge  
 
-    # Non destructive version of remove_vertex!, returns modified copy of Graph
+    # Non destructive version of {AdjacencyGraphBuilder#remove_vertex!} (works on a copy of the graph).
+    #
+    # @param [vertex] v
+    # @return [Graph] a new graph without the specified vertex
     def remove_vertex(v)
       x = self.class.new(self)
       x.remove_vertex!(v)
     end
 
-    # Non destructive version of remove_edge!, returns modified copy of Graph
-    def remove_edge(u,v = nil)
+    # Non destructive version {AdjacencyGraphBuilder#remove_edge!} (works on a copy of the graph).
+    #
+    # @param [vertex] u
+    # @param [vertex] v
+    # @return [Graph] a new graph without the specified edge
+    def remove_edge(u, v = nil)
       x = self.class.new(self)
-      x.remove_edge!(u,v)
+      x.remove_edge!(u, v)
     end
     alias remove_arc remove_edge  
 
-    # Return Array of adjacent portions of the Graph
-    #  x can either be a vertex an edge.
-    #  options specifies parameters about the adjacency search:
-    #   :type can be either :edges or :vertices (default).
-    #   :direction can be :in, :out(default) or :all.
+    # Computes the adjacent portions of the Graph.
     #
-    # Note: It is probably more efficently done in the implementation class.
+    # The options specify the parameters about the adjacency search.
+    # Note: it is probably more efficently done in the implementation class.
+    #
+    # @param [vertex, Edge] x can either be a vertex an edge
+    # @option options [Symbol] :type (:vertices) can be either `:edges` or `:vertices`
+    # @option options [Symbol] :direction (:all) can be `:in`, `:out` or `:all`
+    # @return [Array] an array of the adjacent portions
+    # @fixme
     def adjacent(x, options={})
       d = directed? ? (options[:direction] || :out) : :all
 
-      # Discharge the easy ones first
+      # Discharge the easy ones first.
       return [x.source] if x.is_a? Arc and options[:type] == :vertices and d == :in
       return [x.target] if x.is_a? Arc and options[:type] == :vertices and d == :out
       return [x.source, x.target] if x.is_a? Arc and options[:type] != :edges and d == :all
 
-      (options[:type] == :edges ? edges : to_a).select {|u| adjacent?(x,u,d)}
+      (options[:type] == :edges ? edges : to_a).select { |u| adjacent?(x,u,d) }
     end
-    #FIXME, THIS IS A HACK AROUND A SERIOUS PROBLEM
+    #FIXME: This is a hack around a serious problem
     alias graph_adjacent adjacent
 
 
@@ -157,12 +191,14 @@ module Graphy
     def remove_vertices!(*a)
       a.each { |v| remove_vertex! v }
     end
+    alias delete_vertices! remove_vertices!
 
     # See remove_vertices!
     def remove_vertices(*a)
       x = self.class.new(self)
       x.remove_vertices(*a)
     end
+    alias delete_vertices remove_vertices
 
     # Remove all vertices edges by the Enumerable a from the graph by
     # calling remove_edge!
@@ -170,6 +206,8 @@ module Graphy
       a.each { |e| remove_edges! e }
     end
     alias remove_arcs! remove_edges!
+    alias delete_edges! remove_edges!
+    alias delete_arcs! remove_edges!
 
     # See remove_edges
     def remove_edges(*a)
@@ -177,6 +215,8 @@ module Graphy
       x.remove_edges(*a)
     end
     alias remove_arcs remove_edges
+    alias delete_edges remove_edges
+    alias delete_arcs remove_edges
 
     # Execute given block for each vertex, provides for methods in Enumerable
     def each(&block)
@@ -189,7 +229,8 @@ module Graphy
     # made into an O(1) average complexity operation.
     def vertex?(v)
       vertices.include?(v)
-    end  
+    end
+    alias has_vertex? vertex?
 
     # Returns true if u or (u,v) is an Arc of the graph.
     def edge?(*arg)
@@ -235,24 +276,39 @@ module Graphy
     def include?(x)
       x.is_a?(Graphy::Arc) ? edge?(x) : vertex?(x)
     end
+    alias has? include?
 
-    # Returns the neighboorhood of the given vertex (or Arc)
-    # This is equivalent to adjacent, but bases type on the type of object.
-    # direction can be :all, :in, or :out 
+    # Returns the neighboorhood of the given vertex (or {Arc}).
+    #
+    # This is equivalent to {GraphBuilder#adjacent adjacent}, but bases type on the type of object.
+    # 
+    # @param [vertex] x
+    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
     def neighborhood(x, direction = :all)
       adjacent(x, :direction => direction, :type => ((x.is_a? Graphy::Arc) ? :edges : :vertices )) 
     end
 
-    # Union of all neighborhoods of vertices (or edges) in the Enumerable x minus the contents of x
-    # Definition taken from Jorgen Bang-Jensen, Gregory Gutin, _Digraphs: Theory, Algorithms and Applications_, pg 4
+    # Union of all neighborhoods of vertices (or edges) in the Enumerable x minus the contents of x.
+    #
+    # Definition taken from: Jorgen Bang-Jensen, Gregory Gutin, *Digraphs: Theory, Algorithms and Applications*, pg. 4
+    #
+    # @param [vertex] x
+    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
     def set_neighborhood(x, direction = :all)
       x.inject(Set.new) { |a,v| a.merge(neighborhood(v, idirection))}.reject { |v2| x.include?(v2) }
     end  
 
-    # Union of all set_neighborhoods reachable in p edges
-    # Definition taken from Jorgen Bang-Jensen, Gregory Gutin, _Digraphs: Theory, Algorithms and Applications_, pg 46
+    # Union of all {GraphBuilder#set_neighborhood set_neighborhoods} reachable
+    # among the specified edges.
+    #
+    # Definition taken from Jorgen Bang-Jensen, Gregory Gutin, *Digraphs:
+    # Theory, Algorithms and Applications*, pg. 46
+    #
+    # @param [vertex] w
+    # @param [Edges] p
+    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
     def closed_pth_neighborhood(w, p, direction = :all)
-      if p <= 0
+      if    p <= 0
         w 
       elsif p == 1
         (w + set_neighborhood(w, direction)).uniq
@@ -262,86 +318,123 @@ module Graphy
       end
     end
 
-    # Returns the neighboorhoods reachable in p steps from every vertex (or edge)
-    # in the Enumerable x        
-    # Definition taken from Jorgen Bang-Jensen, Gregory Gutin, _Digraphs: Theory, Algorithms and Applications_, pg 46
+    # Returns the neighboorhoods reachable in a certain amount of steps from
+    # every vertex (or edge) in the specified Enumerable.
+    #
+    # Definition taken from Jorgen Bang-Jensen, Gregory Gutin, _Digraphs:
+    # Theory, Algorithms and Applications_, pg. 46
+    #
+    # @param [Enumerable] x
+    # @param [Integer] p number of steps to perform
+    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
     def open_pth_neighborhood(x, p, direction = :all)
       if    p <= 0
         x
       elsif p == 1
         set_neighborhood(x,direction)
       else  
-        set_neighborhood(open_pth_neighborhood(x, p-1, direction),direction) - closed_pth_neighborhood(x, p-1, direction)
+        set_neighborhood(open_pth_neighborhood(x, p-1, direction), direction) -
+        closed_pth_neighborhood(x, p-1, direction)
       end    
     end
 
     # Returns the number of out-edges (for directed graphs) or the number of
-    # incident edges (for undirected graphs) of vertex _v_.
+    # incident edges (for undirected graphs) of the specified vertex.
+    #
+    # @param [vertex] v
+    # @return [Integer] number of matching edges
     def out_degree(v)
       adjacent(v, :direction => :out).size
     end
 
     # Returns the number of in-edges (for directed graphs) or the number of
-    # incident edges (for undirected graphs) of vertex _v_.
+    # incident edges (for undirected graphs) of the specified vertex
+    #
+    # @param [vertex] v
+    # @return [Integer] number of matching edges
     def in_degree(v)
       adjacent(v, :direction => :in).size
     end
 
-    # Returns the sum of the number in and out edges for a vertex
+    # Returns the sum of the number in and out edges for the specified vertex.
+    #
+    # @param [vertex] v
+    # @returm [Integer] degree
     def degree(v)
       in_degree(v) + out_degree(v)
     end
 
-    # Minimum in-degree 
+    # Minimum in-degree of the graph.
+    #
+    # @return [Integer, nil] returns `nil` if the graph is empty
     def min_in_degree
       return nil if to_a.empty?
-      to_a.map { |v| in_degree(v)}.min
+      to_a.map { |v| in_degree(v) }.min
     end
 
-    # Minimum out-degree
+    # Minimum out-degree of the graph.
+    # 
+    # @return [Integer, nil] returns `nil` if the graph is empty
     def min_out_degree
+      return nil if to_a.empty?
       to_a.map {|v| out_degree(v)}.min
     end
 
-    # Minimum degree of all vertexes
+    # Minimum degree of all vertexes of the graph.
+    #
+    # @return [Integer] `min` between {GraphBuilder#min_in_degree min_in_degree}
+    #   and {GraphBuilder#min_out_degree max_out_degree}
     def min_degree
       [min_in_degree, min_out_degree].min
     end
 
-    # Maximum in-degree 
+    # Maximum in-degree of the graph.
+    #
+    # @return [Integer, nil] returns `nil` if the graph is empty
     def max_in_degree
+      return nil if to_a.empty?
       vertices.map { |v| in_degree(v)}.max
     end
 
-    # Maximum out-degree
+    # Maximum out-degree of the graph.
+    #
+    # @return [Integer, nil] returns nil if the graph is empty
     def max_out_degree
+      return nil if to_a.empty?
       vertices.map { |v| out_degree(v)}.max
     end
 
-    # Minimum degree of all vertexes
+    # Maximum degree of all vertexes of the graph.
+    #
+    # @return [Integer] `max` between {GraphBuilder#max_in_degree max_in_degree}
+    #   and {GraphBuilder#max_out_degree max_out_degree}
     def max_degree
       [max_in_degree, max_out_degree].max
     end
 
-    # Regular
+    # Is the graph regular, that is are its min degree and max degree equal?
+    #
+    # @return [Boolean]
     def regular?
       min_degree == max_degree
     end
 
-    # Returns the number of vertices.
+    # Number of vertices.
+    #
+    # @return [Integer]
     def size
       vertices.size
     end
+    alias num_vertices size
+    alias number_of_vertices size
 
-    # Synonym for size.
-    def num_vertices
-      vertices.size
-    end
-
-    # Returns the number of edges.
+    # Number of edges.
+    #
+    # @return [Integer]
     def num_edges
       edges.size
     end
+    alias number_of_edges num_edges
 
     # Utility method to show a string representation of the edges of the graph.
     #def to_s
@@ -356,13 +449,12 @@ module Graphy
       (vertices.sort == g.vertices.sort) and
       (g.edges.sort  == edges.sort)
     end
+    alias == eql?
 
-    # Synonym for eql?
-    def ==(rhs)
-      eql?(rhs)
-    end
-
-    # Merge another graph into this one
+    # Merges another graph into the receiver.
+    #
+    # @param [Graph] other the graph to merge in
+    # @return [Graph] `self`
     def merge(other)
       other.vertices.each { |v| add_vertex!(v)       }
       other.edges.each    { |e| add_edge!(e)         }
@@ -370,7 +462,10 @@ module Graphy
       self 
     end
 
-    # A synonym for merge, that doesn't modify the current graph
+    # A synonym for {GraphBuilder#merge merge}, but doesn't modify the current graph.
+    #
+    # @param [Graph, Arc] other
+    # @return [Graph] a new graph
     def +(other)
       result = self.class.new(self)
       case other
@@ -383,9 +478,12 @@ module Graphy
       end
     end
 
-    # Remove all vertices in the specified right hand side graph
+    # Removes all vertices in the specified graph.
+    #
+    # @param [Graph, Arc] other
+    # @return [Graph] 
     def -(other)
-      case  other
+      case other
       when Graphy::Graph
         induced_subgraph(vertices - other.vertices)
       when Graphy::Arc
@@ -395,12 +493,14 @@ module Graphy
       end
     end
 
-    # A synonym for add_edge!
+    # A synonym for {AdjacencyGraphBuilder#add_edge! add_edge!}.
     def <<(edge)
       add_edge!(edge)
     end
 
-    # Return the complement of the current graph
+    # Computes the complement of the current graph.
+    #
+    # @return [Graph]
     def complement
       vertices.inject(self.class.new) do |a,v|
         a.add_vertex!(v)
@@ -408,11 +508,14 @@ module Graphy
       end
     end
 
-    # Given an array of vertices return the induced subgraph
+    # Given an array of vertices, computes the induced subgraph.
+    #
+    # @param [Array(vertex)] v
+    # @return [Graph]
     def induced_subgraph(v)
       edges.inject(self.class.new) do |a,e| 
-        ( v.include?(e.source) and v.include?(e.target) ) ?  (a << e) : a
-      end;
+        (v.include?(e.source) and v.include?(e.target)) ? (a << e) : a
+      end
     end
 
     def inspect
@@ -433,6 +536,7 @@ module Graphy
 
     private
 
+    # ?
     def edge_convert(*args)
       args[0].is_a?(Graphy::Arc) ? args[0] : edge_class[*args]
     end

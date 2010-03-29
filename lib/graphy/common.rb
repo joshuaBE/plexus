@@ -37,7 +37,9 @@ module Graphy
   # class and implemeting the minimum methods needed to
   # make it work. This is a good example to look
   # at for making one's own graph classes.
-  module CompleteBuilder < CycleBuilder
+  module CompleteBuilder
+    include CycleBuilder
+
     def initialize(n)
       @size = n
       @edges = nil

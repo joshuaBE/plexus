@@ -33,7 +33,9 @@ module Graphy
     end
 
     def restore_lower_bounds(src)
-      src.edges.each { |e| (src.flow ? src[e][src.flow] : src[e]) = property(e,self.flow) + src.property(e,self.lower) }
+      src.edges.each do |e|
+        (src.flow ? src[e][src.flow] : src[e]) = property(e, self.flow) + src.property(e, self.lower)
+      end
       src
     end
 

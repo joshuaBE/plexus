@@ -1,5 +1,9 @@
 module Graphy
 
+  # This implements a directed graph which does not allow parallel
+  # edges nor loops. That is, only one arc per nodes couple,
+  # and only one parent per node. Mimics the typical hierarchy
+  # structure.
   module DirectedGraphBuilder
     include GraphBuilder
     
@@ -34,8 +38,8 @@ module Graphy
   # DirectedGraph is just an alias for Digraph should one desire
   DigraphBuilder = DirectedGraphBuilder
 
-  # This is a Digraph that allows for paral#lel edges, but does not
-  # allow loops
+  # This is a Digraph that allows for parallel edges, but does not
+  # allow loops.
   module DirectedPseudoGraphBuilder
     include DirectedGraphBuilder
     extends_host
@@ -50,10 +54,9 @@ module Graphy
       args[:parallel_edges] = true
       super *(params << args)
     end
+  end # DirectedPseudoGraphBuilder
 
-  end # DirectedPseudoGraph
-
-  # This is a Digraph that allows for parallel edges and loops
+  # This is a Digraph that allows for both parallel edges and loops.
   module DirectedMultiGraphBuilder
     include DirectedPseudoGraphBuilder
     extends_host
@@ -68,6 +71,6 @@ module Graphy
       args[:loops] = true
       super *(params << args)
     end
-  end # DirectedMultiGraph
+  end # DirectedMultiGraphBuilder
 
 end # Graphy

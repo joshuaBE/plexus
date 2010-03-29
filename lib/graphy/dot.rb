@@ -13,24 +13,31 @@ module Graphy
       params['name'] ||= self.class.name.gsub(/:/,'_')
       fontsize   = params['fontsize'] ? params['fontsize'] : '8'
       graph      = (directed? ? DOT::DOTDigraph : DOT::DOTSubgraph).new(params)
-      edge_klass = directed? ? DOT::DOTDirectedArc : DOT::DOTArc
+      edge_klass =  directed? ? DOT::DOTDirectedArc : DOT::DOTArc
+
       vertices.each do |v|
         name = v.to_s
-        params = {'name'     => '"'+name+'"',
-                  'fontsize' => fontsize,
-                  'label'    => name}
+        if name.nil?
+          #name = v.class.to_s + ":" + v.__id__.to_s
+          name = v.name
+        end
+        params = { 'name'     => '"'+ name +'"',
+                   'fontsize' => fontsize,
+                   'label'    => name}
         v_label = vertex_label(v)
         params.merge!(v_label) if v_label and v_label.kind_of? Hash
         graph << DOT::DOTNode.new(params)
       end
+
       edges.each do |e|
-        params = {'from'     => '"'+ e.source.to_s + '"',
-                  'to'       => '"'+ e.target.to_s + '"',
-                  'fontsize' => fontsize }
+        params = { 'from'     => '"'+ e.source.to_s + '"',
+                   'to'       => '"'+ e.target.to_s + '"',
+                   'fontsize' => fontsize }
         e_label = edge_label(e)
         params.merge!(e_label) if e_label and e_label.kind_of? Hash
         graph << edge_klass.new(params)
       end
+
       graph
     end
 

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bruce Williams"]
-  s.date = %q{2010-03-28}
+  s.date = %q{2010-03-29}
   s.description = %q{A framework for graph data structures and algorithms.
 
 This library is based on GRATR and RGL.
@@ -25,16 +25,16 @@ Graph algorithms currently provided are:
   s.email = %q{bruce@codefluency.com}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.markdown"
+     "README.md"
   ]
   s.files = [
     ".document",
      ".gitignore",
-     "CREDITS.markdown",
+     "CREDITS.md",
      "LICENSE",
-     "README.markdown",
+     "README.md",
      "Rakefile",
-     "TODO.markdown",
+     "TODO.md",
      "VERSION",
      "examples/graph_self.rb",
      "examples/module_graph.jpg",

@@ -1,21 +1,30 @@
 module Graphy
 
-  # This provides the basic routines needed to implement the Digraph,
-  # UndirectedGraph, PseudoGraph, DirectedPseudoGraph, MultiGraph and
-  # DirectedPseudoGraph classes, through Graph, under the control of
-  # the GraphAPI.
+  # This module provides the basic routines needed to implement the specialized builders:
+  # {DigraphBuilder}, {UndirectedGraphBuilder}, {DirectedPseudoGraphBuilder},
+  # {UndirectedPseudoGraphBuilder}, {DirectedMultiGraphBuilder} and {UndirectedMultiGraphBuilder}
+  # modules, each of them streamlining {AdjacencyGraphBuilder}'s behavior. Those
+  # implementations rely on the {GraphBuilder}, under the control of the {GraphAPI}.
   module AdjacencyGraphBuilder
 
-    class ArrayWithAdd < Array # :nodoc:
+    # Useful `push` -> `add` aliasing for Array.
+    class ArrayWithAdd < Array 
       alias add push
     end
 
-    # Initialization parameters can include an Array of edges to add, Graphs to
-    # copy (will merge if multiple)
-    # :parallel_edges denotes that duplicate edges are allowed
-    # :loops denotes that loops are allowed
+    # This method is called by the specialized implementations
+    # upon graph creation.
+    #
+    # Initialization parameters can include:
+    #
+    # * an array of edges to add
+    # * one or several graphs to copy (will be merged if multiple)
+    # * `:parallel_edges` denotes that duplicate edges are allowed
+    # * `:loops denotes` that loops are allowed
+    #
+    # @param *params [Hash] the initialization parameters
     def implementation_initialize(*params)
-      @vertex_dict     = Hash.new    
+      @vertex_dict = Hash.new    
       clear_all_labels
 
       # FIXME: could definitely make use of the activesupport helper
@@ -23,7 +32,7 @@ module Graphy
       # to handle parameters
       args = (params.pop if params.last.is_a? Hash) || {}
 
-      # Basic configuration of adjacency
+      # Basic configuration of adjacency.
       @allow_loops    = args[:loops]          || false
       @parallel_edges = args[:parallel_edges] || false
       @edgelist_class = @parallel_edges ? ArrayWithAdd : Set
@@ -32,7 +41,7 @@ module Graphy
         @next_edge_number = 0 
       end
 
-      # Copy any given graph into this graph
+      # Copy any given graph into this graph.
       params.select { |p| p.is_a? Graphy::Graph }.each do |g|
         g.edges.each do |e| 
           add_edge!(e)
@@ -43,54 +52,83 @@ module Graphy
         end  
       end
 
-      # Add all array edges specified
-      params.select { |p| p.is_a? Array}.each do |a|
-        0.step(a.size-1, 2) { |i| add_edge!(a[i], a[i+1])}
+      # Add all array edges specified.
+      params.select { |p| p.is_a? Array }.each do |a|
+        0.step(a.size-1, 2) { |i| add_edge!(a[i], a[i+1]) }
       end
     end
 
     # Returns true if v is a vertex of this Graph
-    # (an "O(1)" implementation of vertex?)
+    # (an "O(1)" implementation of `vertex?`).
+    #
+    # @param [vertex] v
+    # @return [Boolean]
     def vertex?(v)
       @vertex_dict.has_key?(v)
     end
 
-    # Returns true if [u,v] or u is an Arc
-    # (an "O(1)" implementation of edge?)
+    # Returns true if [u,v] or u is an {Arc}
+    # (an "O(1)" implementation of `edge?`).
+    #
+    # @param [vertex] u
+    # @param [vertex] v (nil)
+    # @return [Boolean]
     def edge?(u, v = nil)
       u, v = u.source, u.target if u.is_a? Graphy::Arc
       vertex?(u) and @vertex_dict[u].include?(v)
     end
 
-    # Adds a vertex to the graph with an optional label
+    # Adds a vertex to the graph with an optional label.
+    #
+    # @param [vertex(Object)] vertex any kind of Object can act as a vertex
+    # @param [#to_s] label (nil)
     def add_vertex!(vertex, label = nil)
       @vertex_dict[vertex] ||= @edgelist_class.new
       self[vertex] = label if label
       self
     end
 
-    # Adds an edge to the graph
-    # Can be called in two basic ways, label is optional
-    #   * add_edge!(Arc[source,target], "Label")
-    #   * add_edge!(source,target, "Label")
+    # Adds an edge to the graph.
+    # 
+    # Can be called in two basic ways, label is optional:
+    # @overload add_edge!(Arc[source,target], "Label")
+    #   Using an explicit {Arc} object
+    #   @param [Arc] arc
+    #   @param [#to_s] label (nil)
+    #   @return [AdjacencyGraph] `self`
+    # @overload add_edge!(source, target, "Label")
+    #   Using vertices
+    #   @param [vertex(Object)] u
+    #   @param [vertex(Object)] v (nil)
+    #   @param [#to_s] l (nil)
+    #   @param [Integer] n (nil) numéro de l'{Arc} `(u,v)` (si `nil` et si `u`
+    #     possède un {ArcNumber}, il sera utilisé)
+    #   @return [AdjacencyGraph] `self`
     def add_edge!(u, v = nil, l = nil, n = nil)
       n = u.number if u.class.include? ArcNumber and n.nil?
       u, v, l = u.source, u.target, u.label if u.is_a? Graphy::Arc
+
       return self if not @allow_loops and u == v
+
       n = (@next_edge_number += 1) unless n if @parallel_edges
       add_vertex!(u)
       add_vertex!(v)        
       @vertex_dict[u].add(v)
       (@edge_number[u] ||= @edgelist_class.new).add(n) if @parallel_edges
+
       unless directed?
         @vertex_dict[v].add(u)
         (@edge_number[v] ||= @edgelist_class.new).add(n) if @parallel_edges
       end
+
       self[n ? edge_class[u,v,n] : edge_class[u,v]] = l if l
       self
     end
 
-    # Removes a given vertex from the graph
+    # Removes a given vertex from the graph.
+    #
+    # @param [vertex] v
+    # @return [AdjacencyGraph] `self`
     def remove_vertex!(v)
       # FIXME This is broken for multi graphs 
       @vertex_dict.delete(v)
@@ -103,8 +141,16 @@ module Graphy
       self
     end
 
-    # Removes an edge from the graph, can be called with source and target or with
-    # and object of Graphy::Arc derivation
+    # Removes an edge from the graph.
+    #
+    # Can be called with both source and target as vertex,
+    # or with source and object of {Graphy::Arc} derivation.
+    #
+    # @param [vertex, Graphy::Arc] u if `u` is a {Graphy::Arc}, then `v` must be left out
+    # @param [vertex] v (nil)
+    # @return [AdjacencyGraph] `self`
+    # @raise [ArgumentError] if passed a {Graphy::Arc} while parallel edges are enabled
+    # @raise [ArgumentError] if parallel edges are enabled and the {ArcNumber} of `u` is zero
     def remove_edge!(u, v = nil)
       unless u.is_a? Graphy::Arc
         raise ArgumentError if @parallel_edges
@@ -124,13 +170,17 @@ module Graphy
       self
     end
 
-    # Returns an array of vertices that the graph has
+    # Returns an array of vertices that the graph has.
+    #
+    # @return [Array] graph's vertices
     def vertices
       @vertex_dict.keys
     end
 
-    # Returns an array of edges, most likely of class Arc or Edge depending 
-    # upon the type of graph
+    # Returns an array of edges, most likely of class {Arc} or {Edge} depending 
+    # upon the type of graph.
+    #
+    # @return [Array]
     def edges
       @vertex_dict.keys.inject(Set.new) do |a,v|
         if @parallel_edges and @edge_number[v]
@@ -147,7 +197,9 @@ module Graphy
       end.to_a
     end
 
-    # FIXME, EFFED UP
+    # FIXME, EFFED UP (but why?)
+    #
+    # @fixme
     def adjacent(x, options = {})
       options[:direction] ||= :out
       if !x.is_a?(Graphy::Arc) and (options[:direction] == :out || !directed?)

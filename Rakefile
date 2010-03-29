@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'rake'
+require 'yard'
 
 begin
   require 'jeweler'
