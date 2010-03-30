@@ -13,17 +13,19 @@ module Graphy
       super(p_source, p_target, p_label)
     end
 
-    # Ignore labels for equality
-    def eql?(other) self.class == other.class and target==other.target and source==other.source; end
-
-    # Alias for eql?
+    # Ignore labels for equality.
+    def eql?(other)
+      self.class == other.class and target==other.target and source==other.source
+    end
     alias == eql?
 
     # Returns (v,u) if self == (u,v).
     def reverse() self.class.new(target, source, label); end
 
-    # Sort support
-    def <=>(rhs) [source,target] <=> [rhs.source,rhs.target]; end
+    # Sort support.
+    def <=>(rhs)
+      [source,target] <=> [rhs.source,rhs.target]
+    end
 
     # Arc.new[1,2].to_s => "(1-2 'label')"
     def to_s
@@ -33,14 +35,26 @@ module Graphy
     
     # Hash is defined in such a way that label is not
     # part of the hash value
-    def hash() source.hash ^ (target.hash+1); end
+    # FIXME: I had to get rid of that in order to make to_dot_graph
+    # work, but I can't figure it out (doesn't show up in the stack!)
+    #def hash
+      #puts "--- #{caller}"
+      ##puts source.inspect
+      ##puts target.inspect
+      #source.hash ^ (target.hash + 1)
+      #puts "---"
+    #end
 
-    # Shortcut constructor. Instead of Arc.new(1,2) one can use Arc[1,2]
-    def self.[](p_source, p_target, p_label=nil)
+    # Shortcut constructor.
+    #
+    # Instead of Arc.new(1,2) one can use Arc[1,2].
+    def self.[](p_source, p_target, p_label = nil)
       new(p_source, p_target, p_label)
     end
     
-    def inspect() "#{self.class.to_s}[#{source.inspect},#{target.inspect},#{label.inspect}]"; end
+    #def inspect
+      #"#{self.class.to_s}[#{source.inspect},#{target.inspect},#{label.inspect}]"
+    #end
     
   end # Arc
   

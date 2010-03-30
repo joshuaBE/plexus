@@ -8,7 +8,7 @@ include Graphy
 
 module AncestryHelper
 
-    # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
+  # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
   # Golumbic, 1980, Academic Press, page 38, Figure 2.6
   def assign_dfsnumber_ancestry(graph, dfsnumber, father, start)
     i = 0
@@ -19,7 +19,7 @@ module AncestryHelper
     graph.dfs({:enter_vertex => ev, :tree_edge => te, :start => start})
   end
 
-    # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
+  # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
   # Golumbic, 1980, Academic Press, page 40, Figure 2.7 
   def assign_bfsnumber_ancestry(graph, bfsnum, level, father, start)
     i = 0
@@ -34,7 +34,7 @@ module AncestryHelper
   end
 
 
-  # Is v an ancestor of u
+  # Is v an ancestor of u?
   def ancestor?(father, u, v)
     i = 1
     while v

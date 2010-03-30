@@ -33,6 +33,7 @@ class Object
   #     a.is_a? Graphy::Graph
   #     # => true
   #
+  # @param [Class] klass
   # @return [Boolean]
   def is_a? klass
     sc = self.singleton_class
@@ -46,8 +47,8 @@ end
 
 class Module
   # Helper which purpose is, given a class including a module,
-  # each methods defined within a module `ClassMethods` in the
-  # module as class methods to the class.
+  # to make each methods defined within a module's submodule `ClassMethods`
+  # available as class methods to the receiving class.
   #
   # Example:
   #
@@ -63,7 +64,7 @@ class Module
   #     B.selfy
   #     # => class method for B
   #
-  # @option *params [Symbol] (:ClassMethods) :with the name of the
+  # @option *params [Symbol] :with (:ClassMethods) the name of the
   #   module to extend the receiver with
   def extends_host(*params)
     args = (params.pop if params.last.is_a? Hash) || {}

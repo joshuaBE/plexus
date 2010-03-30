@@ -83,6 +83,7 @@ $LOAD_PATH.unshift(path + '../../vendor')
 $LOAD_PATH.unshift(path + '../../vendor/priority-queue/lib')
 
 require 'rdot'
+require 'facets/hash'
 
 require 'priority_queue/ruby_priority_queue'
 PriorityQueue = RubyPriorityQueue

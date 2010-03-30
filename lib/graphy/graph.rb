@@ -156,29 +156,42 @@ module Graphy
     alias graph_adjacent adjacent
 
 
-    # Add all objects in _a_ to the vertex set.
+    # Adds all specified vertices to the vertex set.
+    #
+    # @param [#each] *a an Enumerable vertices set
+    # @return [Graph] `self`
     def add_vertices!(*a)
-      a.each {|v| add_vertex! v}
+      a.each { |v| add_vertex! v }
       self
     end
 
-    # See add_vertices!
+    # Same as {GraphBuilder#add_vertices! add_vertices!} but works on copy of the receiver.
+    #
+    # @param [#each] *a
+    # @return [Graph] a modified copy of `self`
     def add_vertices(*a)
       x = self.class.new(self)
       x.add_vertices(*a)
       self
     end
 
-    # Add all edges in the _edges_ Enumerable to the edge set.  Elements of the
-    # Enumerable can be both two-element arrays or instances of DirectedArc or
-    # UnDirectedArc. 
-    def add_edges!(*args)
-      args.each { |edge| add_edge!(edge) }
+    # Adds all edges mentionned in the specified Enumerable to the edge set.
+    #
+    # Elements of the Enumerable can be either two-element arrays or instances of
+    # {Edge} or {Arc}.
+    #
+    # @param [#each] *a an Enumerable edges set
+    # @return [Graph] `self`
+    def add_edges!(*a)
+      a.each { |edge| add_edge!(edge) }
       self
     end
     alias add_arcs! add_edges!  
 
-    # See add_edge!
+    # Same as {GraphBuilder#add_egdes! add_edges!} but works on a copy of the receiver.
+    #
+    # @param [#each] *a an Enumerable edges set
+    # @return [Graph] a modified copy of `self`
     def add_edges(*a)
       x = self.class.new(self)
       x.add_edges!(*a)
@@ -186,22 +199,33 @@ module Graphy
     end
     alias add_arcs add_edges
 
-    # Remove all vertices specified by the Enumerable a from the graph by
-    # calling remove_vertex!.
+    # Removes all vertices mentionned in the specified Enumerable from the graph.
+    #
+    # The process relies on {GraphBuilder#remove_vertex! remove_vertex!}.
+    #
+    # @param [#each] *a an Enumerable vertices set
+    # @return [Graph] `self`
     def remove_vertices!(*a)
       a.each { |v| remove_vertex! v }
     end
     alias delete_vertices! remove_vertices!
 
-    # See remove_vertices!
+    # Same as {GraphBuilder#remove_vertices! remove_vertices!} but works on a copy of the receiver.
+    #
+    # @param [#each] *a a vertex Enumerable set
+    # @return [Graph] a modified copy of `self`
     def remove_vertices(*a)
       x = self.class.new(self)
       x.remove_vertices(*a)
     end
     alias delete_vertices remove_vertices
 
-    # Remove all vertices edges by the Enumerable a from the graph by
-    # calling remove_edge!
+    # Removes all edges mentionned in the specified Enumerable from the graph.
+    #
+    # The process relies on {GraphBuilder#remove_edges! remove_edges!}.
+    #
+    # @param [#each] *a an Enumerable edges set
+    # @return [Graph] `self`
     def remove_edges!(*a)
       a.each { |e| remove_edges! e }
     end
@@ -209,42 +233,63 @@ module Graphy
     alias delete_edges! remove_edges!
     alias delete_arcs! remove_edges!
 
-    # See remove_edges
+    # Same as {GraphBuilder#remove_edges! remove_edges!} but works on a copy of the receiver.
+    #
+    # @param [#each] *a an Enumerable edges set
+    # @return [Graph] a modified copy of `self`
     def remove_edges(*a)
       x = self.class.new(self)
-      x.remove_edges(*a)
+      x.remove_edges!(*a)
     end
     alias remove_arcs remove_edges
     alias delete_edges remove_edges
     alias delete_arcs remove_edges
 
-    # Execute given block for each vertex, provides for methods in Enumerable
+    # Executes the given block for each vertex. It allows for mixing Enumerable in.
     def each(&block)
       vertices.each(&block)
     end
 
-    # Returns true if _v_ is a vertex of the graph.
+    # Returns true if the specified vertex belongs to the graph.
+    #
     # This is a default implementation that is of O(n) average complexity.
     # If a subclass uses a hash to store vertices, then this can be
     # made into an O(1) average complexity operation.
+    #
+    # @param [vertex] v
+    # @return [Boolean]
     def vertex?(v)
       vertices.include?(v)
     end
     alias has_vertex? vertex?
+    # TODO: (has_)vertices?
 
-    # Returns true if u or (u,v) is an Arc of the graph.
-    def edge?(*arg)
+    # Returns true if u or (u,v) is an {Edge edge} of the graph.
+    #
+    # @overload edge?(a)
+    #   @param [Arc, Edge] a
+    #   @return [Boolean]
+    # @overload edge?(u, v)
+    #   @param [vertex] u
+    #   @param [vertex] v
+    #   @return [Boolean]
+    def edge?(*args)
       edges.include?(edge_convert(*args))
     end  
     alias arc? edge?
+    alias has_edge? edge?
+    alias has_arc? edge?
 
     # Tests two objects to see if they are adjacent.
-    # direction parameter specifies direction of adjacency, :in, :out, or :all(default)
-    # All denotes that if there is any adjacency, then it will return true.
-    # Note that the default is different than adjacent where one is primarily concerned with finding
-    # all adjacent objects in a graph to a given object. Here the concern is primarily on seeing
-    # if two objects touch. For vertexes, any edge between the two will usually do, but the direction
-    # can be specified if need be.
+    #
+    # Note that in this method, one is primarily concerned with finding
+    # all adjacent objects in a graph to a given object. The concern is primarily on seeing
+    # if two objects touch. For two vertexes, any edge between the two will usually do, but
+    # the direction can be specified if needed.
+    #
+    # @param [vertex] source
+    # @param [vertex] target
+    # @param [Symbol] direction (:all) constraint on the direction of adjacency; may be either `:in`, `:out` or `:all`
     def adjacent?(source, target, direction = :all)
       if source.is_a? Graphy::Arc
         raise NoArcError unless edge? source
@@ -267,23 +312,56 @@ module Graphy
       end
     end
 
-    # Returns true if the graph has no vertex, i.e. num_vertices == 0.
+    # Is the graph connected?
+    #
+    # A graph is called connected if every pair of distinct vertices in the graph
+    # can be connected through some path. The exact definition depends on whether
+    # the graph is directed or not, hence this method should overriden in specific
+    # implementations.
+    #
+    # This methods implements a lazy routine using the internal vertices hash.
+    # If you ever want to check connectivity state using a bfs/dfs algorithm, use
+    # the `:algo => :bfs` or `:dfs` option.
+    #
+    # @return [Boolean] `true` if the graph is connected, `false` otherwise
+    def connected?(options = {})
+      options = options.reverse_merge! :algo => :bfs
+      if options[:algo] == (:bfs || :dfs)
+        num_nodes = 0
+        send(options[:algo]) { |n| num_nodes += 1 }
+        return num_nodes == @vertex_dict.size
+      else
+        !@vertex_dict.collect { |v| degree(v) > 0 }.any? { |check| check == false }
+      end
+    end
+    # TODO: do it!
+    # TODO: for directed graphs, add weakly_connected? and strongly_connected? (aliased as strong?)
+    # TODO: in the context of vertices/Arc, add connected_vertices? and disconnected_vertices?
+    # TODO: maybe implement some routine which would compute cuts and connectivity? tricky though,
+    #       but would be useful (k_connected?(k))
+
+    # Returns true if the graph has no vertex.
+    #
+    # @return [Boolean]
     def empty?
       vertices.size.zero?
     end
 
-    # Returns true if the given object is a vertex or Arc in the Graph.
+    # Returns true if the given object is a vertex or an {Arc arc} of the graph.
+    # 
+    # @param [vertex, Arc] x
     def include?(x)
       x.is_a?(Graphy::Arc) ? edge?(x) : vertex?(x)
     end
     alias has? include?
 
-    # Returns the neighboorhood of the given vertex (or {Arc}).
+    # Returns the neighborhood of the given vertex or {Arc arc}.
     #
-    # This is equivalent to {GraphBuilder#adjacent adjacent}, but bases type on the type of object.
+    # This is equivalent to {GraphBuilder#adjacent adjacent}, but the type is based on the
+    # type of the specified object.
     # 
-    # @param [vertex] x
-    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
+    # @param [vertex, Arc] x
+    # @param [Symbol] direction (:all) can be either `:all`, `:in` or `:out`
     def neighborhood(x, direction = :all)
       adjacent(x, :direction => direction, :type => ((x.is_a? Graphy::Arc) ? :edges : :vertices )) 
     end
@@ -293,7 +371,7 @@ module Graphy
     # Definition taken from: Jorgen Bang-Jensen, Gregory Gutin, *Digraphs: Theory, Algorithms and Applications*, pg. 4
     #
     # @param [vertex] x
-    # @param [Symbol] direction can be `:all`, `:in`, or `:out`
+    # @param [Symbol] direction can be either `:all`, `:in` or `:out`
     def set_neighborhood(x, direction = :all)
       x.inject(Set.new) { |a,v| a.merge(neighborhood(v, idirection))}.reject { |v2| x.include?(v2) }
     end  
@@ -359,7 +437,7 @@ module Graphy
     # Returns the sum of the number in and out edges for the specified vertex.
     #
     # @param [vertex] v
-    # @returm [Integer] degree
+    # @return [Integer] degree
     def degree(v)
       in_degree(v) + out_degree(v)
     end
@@ -518,21 +596,21 @@ module Graphy
       end
     end
 
-    def inspect
-      # FIXME: broken, it's not updated. The issue's not with inspect, but it's worth mentionning here.
-      # Example:
-      #     dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
-      #     dg.add_vertices! 1, 5, "yosh"
-      #     # => Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
-      #     dg.vertex?("yosh")
-      #     # => true
-      #     dg
-      #     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]] 
-      # the new vertex doesn't show up.
-      # Actually this version of inspect is far too verbose IMO :)
-      l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
-      self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
-    end
+    #def inspect
+      ## FIXME: broken, it's not updated. The issue's not with inspect, but it's worth mentionning here.
+      ## Example:
+      ##     dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
+      ##     dg.add_vertices! 1, 5, "yosh"
+      ##     # => Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
+      ##     dg.vertex?("yosh")
+      ##     # => true
+      ##     dg
+      ##     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]] 
+      ## the new vertex doesn't show up.
+      ## Actually this version of inspect is far too verbose IMO :)
+      #l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
+      #self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
+    #end
 
     private
 

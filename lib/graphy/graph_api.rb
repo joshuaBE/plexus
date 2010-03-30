@@ -1,5 +1,5 @@
 module Graphy
-  # This module defines the minimum set of functions required to make a graph class that can
+  # This module defines the minimum set of functions required to make a graph that can
   # use the algorithms defined by this library.
   #
   # Each implementation module must implement the following routines:

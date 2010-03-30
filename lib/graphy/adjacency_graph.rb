@@ -7,7 +7,7 @@ module Graphy
   # implementations rely on the {GraphBuilder}, under the control of the {GraphAPI}.
   module AdjacencyGraphBuilder
 
-    # Useful `push` -> `add` aliasing for Array.
+    # Defines a useful `push` -> `add` alias for arrays.
     class ArrayWithAdd < Array 
       alias add push
     end
@@ -91,18 +91,17 @@ module Graphy
     # Adds an edge to the graph.
     # 
     # Can be called in two basic ways, label is optional:
-    # @overload add_edge!(Arc[source,target], "Label")
-    #   Using an explicit {Arc} object
-    #   @param [Arc] arc
-    #   @param [#to_s] label (nil)
+    # @overload add_edge!(arc)
+    #   Using an explicit {Arc}
+    #   @param [Arc] arc an {Arc}[source, target, label = nil] object
     #   @return [AdjacencyGraph] `self`
-    # @overload add_edge!(source, target, "Label")
-    #   Using vertices
-    #   @param [vertex(Object)] u
-    #   @param [vertex(Object)] v (nil)
-    #   @param [#to_s] l (nil)
-    #   @param [Integer] n (nil) numéro de l'{Arc} `(u,v)` (si `nil` et si `u`
-    #     possède un {ArcNumber}, il sera utilisé)
+    # @overload add_edge!(source, target, label = nil)
+    #   Using vertices to define an arc implicitly
+    #   @param [vertex] u
+    #   @param [vertex] v (nil)
+    #   @param [Label] l (nil)
+    #   @param [Integer] n (nil) {Arc arc} number of `(u, v)` (if `nil` and if `u`
+    #     has an {ArcNumber}, then it will be used)
     #   @return [AdjacencyGraph] `self`
     def add_edge!(u, v = nil, l = nil, n = nil)
       n = u.number if u.class.include? ArcNumber and n.nil?
@@ -112,7 +111,7 @@ module Graphy
 
       n = (@next_edge_number += 1) unless n if @parallel_edges
       add_vertex!(u)
-      add_vertex!(v)        
+      add_vertex!(v)
       @vertex_dict[u].add(v)
       (@edge_number[u] ||= @edgelist_class.new).add(n) if @parallel_edges
 
@@ -146,11 +145,15 @@ module Graphy
     # Can be called with both source and target as vertex,
     # or with source and object of {Graphy::Arc} derivation.
     #
-    # @param [vertex, Graphy::Arc] u if `u` is a {Graphy::Arc}, then `v` must be left out
-    # @param [vertex] v (nil)
-    # @return [AdjacencyGraph] `self`
-    # @raise [ArgumentError] if passed a {Graphy::Arc} while parallel edges are enabled
-    # @raise [ArgumentError] if parallel edges are enabled and the {ArcNumber} of `u` is zero
+    # @overload remove_edge!(a)
+    #   @param [Graphy::Arc] a
+    #   @return [AdjacencyGraph] `self`
+    #   @raise [ArgumentError] if parallel edges are enabled
+    # @overload remove_edge!(u, v)
+    #   @param [vertex] u
+    #   @param [vertex] v
+    #   @return [AdjacencyGraph] `self`
+    #   @raise [ArgumentError] if parallel edges are enabled and the {ArcNumber} of `u` is zero
     def remove_edge!(u, v = nil)
       unless u.is_a? Graphy::Arc
         raise ArgumentError if @parallel_edges

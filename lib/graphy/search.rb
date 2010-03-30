@@ -305,7 +305,8 @@ module Graphy
         if u == goal
           solution = [goal]
           while u != start
-            solution << parent[u]; u = parent[u]
+            solution << parent[u]
+            u = parent[u]
           end
           return solution.reverse
         end
@@ -314,6 +315,7 @@ module Graphy
           v = e.source == u ? e.target : e.source
           options.handle_callback(:examine_edge, e)
           w = cost(e, options[:weight])
+          puts w.inspect
           raise ArgumentError unless w
 
           if d[v].nil? or (w + d[u]) < d[v] 
@@ -335,7 +337,7 @@ module Graphy
         end # adjacent(u)
 
         color[u] = :black
-        options.handle_callback(:finish_vertex,u)
+        options.handle_callback(:finish_vertex, u)
       end # queue.empty?
 
       nil # failure, on fall through
