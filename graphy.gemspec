@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Bruce Williams"]
-  s.date = %q{2010-03-30}
+  s.date = %q{2010-03-31}
   s.description = %q{A framework for graph data structures and algorithms.
 
 This library is based on GRATR and RGL.

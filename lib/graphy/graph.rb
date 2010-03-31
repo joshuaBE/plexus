@@ -27,7 +27,7 @@ module Graphy
       end
     end
 
-    # Create a generic graph.
+    # Creates a generic graph.
     #
     # @param [Hash(Graphy::Graph, Array)] *params initialization parameters.
     #   See {AdjacencyGraphBuilder#implementation_initialize} for more details.
@@ -47,9 +47,9 @@ module Graphy
         self
       end.module_eval do
         # These inclusions trigger some validations checks by the way.
-        include(args[:implementation]       ? args[:implementation]       : AdjacencyGraphBuilder)
-        include(args[:algorithmic_category] ? args[:algorithmic_category] : DigraphBuilder       )
-        include GraphAPI
+        include(args[:implementation]       ? args[:implementation]       : Graphy::AdjacencyGraphBuilder)
+        include(args[:algorithmic_category] ? args[:algorithmic_category] : Graphy::DigraphBuilder       )
+        include Graphy::GraphAPI
       end
 
       implementation_initialize(*params)
@@ -92,23 +92,23 @@ module Graphy
 
     # Non destructive version of {AdjacencyGraphBuilder#add_vertex!} (works on a copy of the graph).
     #
-    # @param [vertex] u
-    # @param [#to_s] l
+    # @param [vertex] v
+    # @param [Label] l
     # @return [Graph] a new graph with the supplementary vertex
     def add_vertex(v, l = nil)
       x = self.class.new(self)
-      x.add_vertex!(v,l)
+      x.add_vertex!(v, l)
     end
 
     # Non destructive version {AdjacencyGraphBuilder#add_edge!} (works on a copy of the graph).
     #
     # @param [vertex] u
     # @param [vertex] v
-    # @param [#to_s] l
+    # @param [Label] l
     # @return [Graph] a new graph with the supplementary edge
     def add_edge(u, v = nil, l = nil)
       x = self.class.new(self)
-      x.add_edge!(u,v,l)
+      x.add_edge!(u, v, l)
     end
     alias add_arc add_edge  
 
@@ -268,11 +268,10 @@ module Graphy
     #
     # @overload edge?(a)
     #   @param [Arc, Edge] a
-    #   @return [Boolean]
     # @overload edge?(u, v)
     #   @param [vertex] u
     #   @param [vertex] v
-    #   @return [Boolean]
+    # @return [Boolean]
     def edge?(*args)
       edges.include?(edge_convert(*args))
     end  

@@ -4,7 +4,7 @@ module Graphy
 
     autoload :Algorithms, "graphy/undirected_graph/algorithms"
 
-    include GraphBuilder
+    include Graphy::GraphBuilder
     extends_host
     module ClassMethods
       def [](*a)
@@ -14,7 +14,7 @@ module Graphy
 
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
-      args[:algorithmic_category] = UndirectedGraphBuilder::Algorithms    
+      args[:algorithmic_category] = Graphy::UndirectedGraphBuilder::Algorithms    
       super *(params << args)
     end
   end

@@ -42,7 +42,7 @@ module Graphy
       end
 
       # Copy any given graph into this graph.
-      params.select { |p| p.is_a? Graphy::Graph }.each do |g|
+      params.select { |p| p.is_a? Graphy::GraphBuilder }.each do |g|
         g.edges.each do |e| 
           add_edge!(e)
           edge_label_set(e, edge_label(e)) if edge_label(e)
@@ -209,8 +209,8 @@ module Graphy
         if options[:type] == :edges
           i = -1
           @parallel_edges ?
-            @vertex_dict[x].map { |v| e=edge_class[x, v, @edge_number[x][i+=1]]; e.label = self[e]; e} :
-            @vertex_dict[x].map { |v| e=edge_class[x, v];  e.label = self[e]; e}
+            @vertex_dict[x].map { |v| e = edge_class[x, v, @edge_number[x][i+=1]]; e.label = self[e]; e } :
+            @vertex_dict[x].map { |v| e = edge_class[x, v];  e.label = self[e]; e }
         else
           @vertex_dict[x].to_a
         end

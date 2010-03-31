@@ -315,7 +315,6 @@ module Graphy
           v = e.source == u ? e.target : e.source
           options.handle_callback(:examine_edge, e)
           w = cost(e, options[:weight])
-          puts w.inspect
           raise ArgumentError unless w
 
           if d[v].nil? or (w + d[u]) < d[v] 
