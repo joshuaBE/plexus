@@ -227,7 +227,7 @@ module Graphy
     # @param [#each] *a an Enumerable edges set
     # @return [Graph] `self`
     def remove_edges!(*a)
-      a.each { |e| remove_edges! e }
+      a.each { |e| remove_edge! e }
     end
     alias remove_arcs! remove_edges!
     alias delete_edges! remove_edges!
@@ -504,6 +504,14 @@ module Graphy
     end
     alias num_vertices size
     alias number_of_vertices size
+
+    # Number of vertices.
+    #
+    # @return [Integer]
+    def num_vertices
+      vertices.size
+    end
+    alias number_of_vertices num_vertices
 
     # Number of edges.
     #

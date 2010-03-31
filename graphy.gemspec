@@ -65,6 +65,7 @@ Graph algorithms currently provided are:
      "lib/graphy/ruby_compatibility.rb",
      "lib/graphy/search.rb",
      "lib/graphy/strong_components.rb",
+     "lib/graphy/support/support.rb",
      "lib/graphy/undirected_graph.rb",
      "lib/graphy/undirected_graph/algorithms.rb",
      "spec/biconnected_spec.rb",
