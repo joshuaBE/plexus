@@ -31,6 +31,7 @@ module Graphy
       # extract_options! and facets' reverse_merge! technique
       # to handle parameters
       args = (params.pop if params.last.is_a? Hash) || {}
+      puts args.inspect
 
       # Basic configuration of adjacency.
       @allow_loops    = args[:loops]          || false
@@ -48,6 +49,7 @@ module Graphy
           edge_label_set(e, edge_label(e)) if edge_label(e)
         end
         g.vertices.each do |v|
+          add_vertex!(v)
           vertex_label_set(v, vertex_label(v)) if vertex_label(v)
         end  
       end
