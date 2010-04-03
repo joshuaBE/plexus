@@ -73,13 +73,17 @@ module Graphy
       system('dotty', dotfile)
     end
 
-    # Use +dot+ to create a graphical representation of the graph.  Returns the
+    # Use +dot+ to create a graphical representation of the graph. Returns the
     # filename of the graphics file.
     def write_to_graphic_file(fmt = 'png', dotfile = 'graph')
       src = dotfile + '.dot'
       dot = dotfile + '.' + fmt
 
-      File.open(src, 'w') {|f| f << self.to_dot << "\n"}
+      # DOT::DOTSubgraph creates subgraphs, but that's broken.
+      buffer = self.to_dot
+      buffer.gsub!(/^subgraph/, "graph")
+
+      File.open(src, 'w') {|f| f << buffer << "\n"}
       system( "dot -T#{fmt} #{src} -o #{dot}" )
 
       dot
