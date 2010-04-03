@@ -142,7 +142,7 @@ module Graphy
     # @option options [Symbol] :direction (:all) can be `:in`, `:out` or `:all`
     # @return [Array] an array of the adjacent portions
     # @fixme
-    def adjacent(x, options={})
+    def adjacent(x, options = {})
       d = directed? ? (options[:direction] || :out) : :all
 
       # Discharge the easy ones first.
@@ -171,7 +171,7 @@ module Graphy
     # @return [Graph] a modified copy of `self`
     def add_vertices(*a)
       x = self.class.new(self)
-      x.add_vertices(*a)
+      x.add_vertices!(*a)
       self
     end
 
@@ -343,6 +343,7 @@ module Graphy
     #
     # @return [Boolean]
     def empty?
+      puts "yan"
       vertices.size.zero?
     end
 
