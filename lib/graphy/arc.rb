@@ -15,7 +15,7 @@ module Graphy
 
     # Ignore labels for equality.
     def eql?(other)
-      self.class == other.class and target==other.target and source==other.source
+      self.class == other.class and target == other.target and source == other.source
     end
     alias == eql?
 
@@ -24,7 +24,7 @@ module Graphy
 
     # Sort support.
     def <=>(rhs)
-      [source,target] <=> [rhs.source,rhs.target]
+      [source, target] <=> [rhs.source, rhs.target]
     end
 
     # Arc.new[1,2].to_s => "(1-2 'label')"
