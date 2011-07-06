@@ -1,9 +1,8 @@
 module Graphy
-
   # Digraph is a directed graph which is a finite set of vertices
   # and a finite set of edges connecting vertices. It cannot contain parallel
   # edges going from the same source vertex to the same target. It also
-  # cannot contain loops, i.e. edges that go have the same vertex for source 
+  # cannot contain loops, i.e. edges that go have the same vertex for source
   # and target.
   #
   # DirectedPseudoGraph is a class that allows for parallel edges, and
@@ -11,31 +10,33 @@ module Graphy
   # as well.
   module DirectedGraphBuilder
     module Algorithms
-
       include Search
       include StrongComponents
       include Distance
       include ChinesePostman
 
-      # A directed graph is directed by definition
+      # A directed graph is directed by definition.
       #
       # @return [Boolean] always true
+      #
       def directed?
         true
       end
 
-      # A digraph uses the Arc class for edges
+      # A digraph uses the Arc class for edges.
       #
       # @return [Graphy::MultiArc, Graphy::Arc] `Graphy::MultiArc` if the graph allows for parallel edges,
       #   `Graphy::Arc` otherwise.
+      #
       def edge_class
         @parallel_edges ? Graphy::MultiArc : Graphy::Arc
       end
 
-      # Reverse all edges in a graph
+      # Reverse all edges in a graph.
       #
       # @return [DirectedGraph] a copy of the receiver for which the direction of edges has
       #   been inverted.
+      #
       def reversal
         result = self.class.new
         edges.inject(result) { |a,e| a << e.reverse}
@@ -43,23 +44,26 @@ module Graphy
         result
       end
 
-      # Check whether the Graph is oriented or not.
+      # Check whether the graph is oriented or not.
       #
       # @return [Boolean]
+      #
       def oriented?
         e = edges
         re = e.map { |x| x.reverse}
         not e.any? { |x| re.include?(x)}
       end
 
-      # Balanced is when the out edge count is equal to the in edge count
+      # Balanced is the state when the out edges count is equal to the in edges count.
       #
       # @return [Boolean]
+      #
       def balanced?(v)
         out_degree(v) == in_degree(v)
       end
 
-      # Returns out_degree(v) - in_degree(v)
+      # Returns out_degree(v) - in_degree(v).
+      #
       def delta(v)
         out_degree(v) - in_degree(v)
       end
@@ -85,8 +89,7 @@ module Graphy
 
       def family(node)
         community(node, :all)
-      end    
-
-    end # Algorithms
-  end # DirectedGraphBuilder
-end # Graphy
+      end
+    end
+  end
+end

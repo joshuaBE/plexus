@@ -1,13 +1,12 @@
-require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'spec_helper'
 
-describe "Arc" do # :nodoc:
-
+describe Arc do
   before do
     @e = Arc.new(1,2,'boo')
     @u = Edge.new(1,2,'hoo')
   end
 
-  describe "edge_new" do
+  describe "#edge_new" do
     it do
       proc { Arc.new }.should raise_error(ArgumentError)
       proc { Arc.new(1) }.should raise_error(ArgumentError)
@@ -16,7 +15,7 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "edge_getters" do
+  describe "#edge_getters" do
     it do
       @e.source.should == 1
       @e.target.should == 2
@@ -25,14 +24,14 @@ describe "Arc" do # :nodoc:
       @e[0].should == 1
       @e[1].should == 2
       @e[2].should == 'boo'
-      
+
       @e[-3].should == 1
       @e[-2].should == 2
       @e[-1].should == 'boo'
 
-      proc { @e[-4] }.should raise_error(IndexError) 
-      proc { @e[3] }.should raise_error(IndexError)  
-      
+      proc { @e[-4] }.should raise_error(IndexError)
+      proc { @e[3] }.should raise_error(IndexError)
+
       @e['source'].should == 1
       @e['target'].should == 2
       @e['label'].should == 'boo'
@@ -43,7 +42,7 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "edge_setters" do
+  describe "#edge_setters" do
     it do
       @e.source = 23
       @e.target = 42
@@ -82,7 +81,7 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "edge_simple_methods" do
+  describe "#edge_simple_methods" do
     it do
       @e.to_a.should == [1,2,'boo']
       @e.to_s.should == "(1-2 'boo')"
@@ -99,14 +98,14 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "edge_sort" do
+  describe "#edge_sort" do
     it do
       x = [ Arc.new(2,3), Arc.new(1,3), Arc.new(1,2), Arc.new(2,1) ].sort
       x.should == [Arc.new(1,2), Arc.new(1,3), Arc.new(2,1), Arc.new(2,3)]
     end
   end
 
-  describe "undirected_edge_new" do
+  describe "#undirected_edge_new" do
     it do
       proc { Edge.new }.should raise_error(ArgumentError)
       proc { Edge.new(1) }.should raise_error(ArgumentError)
@@ -115,7 +114,7 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "undirected_edge_getters" do
+  describe "#undirected_edge_getters" do
     it do
       @u.source.should == 1
       @u.target.should == 2
@@ -124,7 +123,7 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "undirected_edge_methods" do
+  describe "#undirected_edge_methods" do
     it do
       @u.label = nil
       @u.to_s.should == "(1=2)"
@@ -138,14 +137,14 @@ describe "Arc" do # :nodoc:
     end
   end
 
-  describe "undirected_edge_sort" do
+  describe "#undirected_edge_sort" do
     it do
       x = [Edge.new(12, 1), Edge.new(2,11)].sort
       x.should == [Edge.new(2,11), Edge.new(1,12)]
     end
   end
-  
-  describe "hash" do
+
+  describe "#hash" do
     it do
       Arc[1,2,:c].should == Arc[1,2,:b]
       Arc[1,2,:c].hash.should == Arc[1,2,:b].hash

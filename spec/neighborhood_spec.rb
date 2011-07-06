@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
-describe "Neighborhood" do # :nodoc:
-  
+describe "Neighborhood" do
   before do
     @d = Digraph[:a,:b, :a,:f,
                  :b,:g,
@@ -12,7 +11,7 @@ describe "Neighborhood" do # :nodoc:
                  :g,:a, :g,:e]
     @w = [:a,:b]
   end
-  
+
   describe "open_out_neighborhood" do
     it do
       @d.set_neighborhood([:a],    :in).should == [:g]
@@ -24,7 +23,7 @@ describe "Neighborhood" do # :nodoc:
       ([:c]     - @d.open_pth_neighborhood(@w, 4, :out)).should == []
     end
   end
-  
+
   describe "closed_out_neighborhood" do
     it do
       (@w                     - @d.closed_pth_neighborhood(@w, 0, :out)).should == []
@@ -34,5 +33,4 @@ describe "Neighborhood" do # :nodoc:
       ([:a,:b,:c,:d,:e,:f,:g] - @d.closed_pth_neighborhood(@w, 4, :out)).should == []
     end
   end
-  
 end

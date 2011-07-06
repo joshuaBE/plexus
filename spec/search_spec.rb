@@ -9,14 +9,14 @@ describe "Search" do # :nodoc:
   end
 
   # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
-  # Golumbic, 1980, Academic Press, page 39, Propery (D1) and (D2) of 
+  # Golumbic, 1980, Academic Press, page 39, Propery (D1) and (D2) of
   # depth first search
   describe "dfs_properties" do
     it do
       dfs = {}
       father = {}
       @directed.each do |vertex|
-        assign_dfsnumber_ancestry(@directed, dfs, father, vertex)  
+        assign_dfsnumber_ancestry(@directed, dfs, father, vertex)
         # Property (D1)
         father.keys.each {|v| dfs[father[v]].should be < dfs[v] }
         # Property (D2)
@@ -30,15 +30,15 @@ describe "Search" do # :nodoc:
   end
 
   # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
-  # Golumbic, 1980, Academic Press, page 40, Propery (B1), (B2) and (B3) of 
+  # Golumbic, 1980, Academic Press, page 40, Propery (B1), (B2) and (B3) of
   # breadth first search
   describe "bfs_properties" do
     it do
-      level  = {}  
+      level  = {}
       father = {}
       bfs    = {}
       @directed.each do |vertex|
-        assign_bfsnumber_ancestry(@directed, bfs, level, father, vertex)  
+        assign_bfsnumber_ancestry(@directed, bfs, level, father, vertex)
         # Property (B1)
         father.keys.each do |v|
           bfs[father[v]].should be < bfs[v]
@@ -107,7 +107,7 @@ describe "Search" do # :nodoc:
 
       # Heuristic from "Artificial Intelligence: A Modern Approach" by Stuart
       # Russell ande Peter Norvig, Prentice-Hall 2nd Edition, pg 95
-      straight_line_to_Bucharest = 
+      straight_line_to_Bucharest =
         {
         'Arad'           => 366,
         'Bucharest'      =>   0,
@@ -142,57 +142,57 @@ describe "Search" do # :nodoc:
       fv  = Proc.new {|v| list << "fv #{v}" }
       er  = Proc.new {|e| list << "er #{e}" }
       enr = Proc.new {|e| list << "enr #{e}" }
-      
+
       options = { :discover_vertex  => dv,
         :examine_vertex   => ev,
         :black_target     => bt,
         :finish_vertex    => fv,
         :edge_relaxed     => er,
         :edge_not_relaxed => enr }
-      
+
       result = romania.astar('Arad', 'Bucharest', h, options)
 
       result.should == ["Arad", "Sibiu", "Rimnicu Vilcea", "Pitesti", "Bucharest"]
       # This isn't the greatest test since the exact ordering is not
       # not specified by the algorithm. If someone has a better idea, please fix
       list.should ==  ["ev Arad",
-                    "er (Arad=Sibiu '99')",
-                    "dv Sibiu",
-                    "er (Arad=Timisoara '138')",
-                    "dv Timisoara",
-                    "er (Arad=Zerind '75')",
-                    "dv Zerind",
-                    "fv Arad",
-                    "ev Sibiu",
-                    "er (Rimnicu Vilcea=Sibiu '80')",
-                    "dv Rimnicu Vilcea",
-                    "er (Fagaras=Sibiu '99')",
-                    "dv Fagaras",
-                    "er (Oradea=Sibiu '151')",
-                    "dv Oradea",
-                    "enr (Arad=Sibiu '99')",
-                    "fv Sibiu",
-                    "ev Rimnicu Vilcea",
-                    "enr (Rimnicu Vilcea=Sibiu '80')",
-                    "er (Craiova=Rimnicu Vilcea '146')",
-                    "dv Craiova",
-                    "er (Pitesti=Rimnicu Vilcea '97')",
-                    "dv Pitesti",
-                    "fv Rimnicu Vilcea",
-                    "ev Fagaras",
-                    "enr (Fagaras=Sibiu '99')",
-                    "er (Bucharest=Fagaras '211')",
-                    "dv Bucharest",
-                    "fv Fagaras",
-                    "ev Pitesti",
-                    "enr (Pitesti=Rimnicu Vilcea '97')",
-                    "er (Bucharest=Pitesti '101')",
-                    "enr (Craiova=Pitesti '138')",
-                    "fv Pitesti",
-                    "ev Bucharest"]
+                       "er (Arad=Sibiu '99')",
+                       "dv Sibiu",
+                       "er (Arad=Timisoara '138')",
+                       "dv Timisoara",
+                       "er (Arad=Zerind '75')",
+                       "dv Zerind",
+                       "fv Arad",
+                       "ev Sibiu",
+                       "er (Rimnicu Vilcea=Sibiu '80')",
+                       "dv Rimnicu Vilcea",
+                       "er (Fagaras=Sibiu '99')",
+                       "dv Fagaras",
+                       "er (Oradea=Sibiu '151')",
+                       "dv Oradea",
+                       "enr (Arad=Sibiu '99')",
+                       "fv Sibiu",
+                       "ev Rimnicu Vilcea",
+                       "enr (Rimnicu Vilcea=Sibiu '80')",
+                       "er (Craiova=Rimnicu Vilcea '146')",
+                       "dv Craiova",
+                       "er (Pitesti=Rimnicu Vilcea '97')",
+                       "dv Pitesti",
+                       "fv Rimnicu Vilcea",
+                       "ev Fagaras",
+                       "enr (Fagaras=Sibiu '99')",
+                       "er (Bucharest=Fagaras '211')",
+                       "dv Bucharest",
+                       "fv Fagaras",
+                       "ev Pitesti",
+                       "enr (Pitesti=Rimnicu Vilcea '97')",
+                       "er (Bucharest=Pitesti '101')",
+                       "enr (Craiova=Pitesti '138')",
+                       "fv Pitesti",
+                       "ev Bucharest"]
     end
   end
-  
+
   describe "bfs_spanning_forest" do
     it do
       predecessor, roots = @tree.bfs_spanning_forest(1)
@@ -203,7 +203,7 @@ describe "Search" do # :nodoc:
       roots.sort.should == [1,3,5,6,23]
     end
   end
-  
+
   describe "dfs_spanning_forest" do
     it do
       predecessor, roots = @tree.dfs_spanning_forest(1)
@@ -214,7 +214,7 @@ describe "Search" do # :nodoc:
       roots.sort.should == [1,3,5,6,23]
     end
   end
-  
+
   describe "tree_from_vertex" do
     it do
       @tree.bfs_tree_from_vertex(1).should == {5=>2, 6=>2, 7=>6, 2=>1, 3=>1, 4=>1}

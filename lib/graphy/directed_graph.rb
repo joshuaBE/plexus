@@ -6,21 +6,22 @@ module Graphy
   # structure.
   module DirectedGraphBuilder
     include GraphBuilder
-    
+
     autoload :Algorithms, "graphy/directed_graph/algorithms"
-    autoload :Distance,   "graphy/directed_graph/distance"    
+    autoload :Distance,   "graphy/directed_graph/distance"
 
     # FIXME: DRY this snippet, I didn't find a clever way to
     # to dit though
     # TODO: well, extends_host_with do ... end would be cool,
     # using Module.new.module_eval(&block) in the helper.
     extends_host
+
     module ClassMethods
       def [](*a)
         self.new.from_array(*a)
       end
     end
-    
+
     def initialize(*params)
       # FIXME/TODO: setting args to the hash or {} while getting rid
       # on the previous parameters prevents from passing another
@@ -30,11 +31,11 @@ module Graphy
       # we should provide a way to handle the graph as a hash
       # member.
       args = (params.pop if params.last.kind_of? Hash) || {}
-      args[:algorithmic_category] = DirectedGraphBuilder::Algorithms    
+      args[:algorithmic_category] = DirectedGraphBuilder::Algorithms
       super *(params << args)
     end
-  end # DirectedGraphBuilder
-  
+  end
+
   # DirectedGraph is just an alias for Digraph should one desire
   DigraphBuilder = DirectedGraphBuilder
 
@@ -43,23 +44,25 @@ module Graphy
   module DirectedPseudoGraphBuilder
     include DirectedGraphBuilder
     extends_host
+
     module ClassMethods
       def [](*a)
         self.new.from_array(*a)
       end
     end
-    
+
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
       args[:parallel_edges] = true
       super *(params << args)
     end
-  end # DirectedPseudoGraphBuilder
+  end
 
   # This is a Digraph that allows for both parallel edges and loops.
   module DirectedMultiGraphBuilder
     include DirectedPseudoGraphBuilder
     extends_host
+
     module ClassMethods
       def [](*a)
         self.new.from_array(*a)
@@ -71,6 +74,5 @@ module Graphy
       args[:loops] = true
       super *(params << args)
     end
-  end # DirectedMultiGraphBuilder
-
-end # Graphy
+  end
+end

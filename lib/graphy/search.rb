@@ -35,7 +35,7 @@ module Graphy
   #     te = Proc.new { |x| puts "Tree Arc #{x}" }
   #     be = Proc.new { |x| puts "Back Arc #{x}" }
   #     fe = Proc.new { |x| puts "Forward Arc #{x}" }
-  #     Digraph[1,2, 2,3, 3,4].dfs({ 
+  #     Digraph[1,2, 2,3, 3,4].dfs({
   #        :enter_vertex => ev,
   #        :exit_vertex  => xv,
   #        :start_vertex => sv,
@@ -43,7 +43,7 @@ module Graphy
   #        :tree_edge    => te,
   #        :back_edge    => be,
   #        :forward_edge => fe })
-  # 
+  #
   # Which outputs:
   #
   #     Start vertex 1
@@ -127,7 +127,7 @@ module Graphy
       te = Proc.new { |e| predecessor[e.target] = e.source if correct_tree }
       rv = Proc.new { |v| correct_tree = (v == start) }
       send routine, :start => start, :tree_edge => te, :root_vertex => rv
-      predecessor       
+      predecessor
     end
 
     # Returns a hash of predecessors for the depth-first search tree rooted at the given node.
@@ -164,12 +164,12 @@ module Graphy
         @set  = {}
         @tail = @node.new(nil, nil, Array.new(values))
         @tail.instance_eval { @hash = (@@cnt += 1) }
-        values.each { |a| @set[a] = @tail }        
+        values.each { |a| @set[a] = @tail }
       end
 
       # Pops an entry with the maximum lexical value from the queue.
       #
-      # @return [vertex] 
+      # @return [vertex]
       def pop
         return nil unless @tail
         value = @tail[:data].pop
@@ -179,7 +179,7 @@ module Graphy
       end
 
       # Increase the lexical value of the given values.
-      # 
+      #
       # @param [Array] vertices values
       def add_lexeme(values)
         fix = {}
@@ -188,7 +188,7 @@ module Graphy
           sw = @set[w]
           if fix[sw]
             s_prime = sw[:back]
-          else 
+          else
             s_prime = @node.new(sw[:back], sw, [])
             s_prime.instance_eval { @hash = (@@cnt += 1) }
             @tail = s_prime if @tail == sw
@@ -206,7 +206,7 @@ module Graphy
           e[:forward][:back] = e[:back]    if e[:forward]
           e[:back][:forward] = e[:forward] if e[:back]
         end
-      end 
+      end
 
     end
 
@@ -214,7 +214,7 @@ module Graphy
     #
     # The usual queue of vertices is replaced by a queue of *unordered subsets*
     # of the vertices, which is sometimes refined but never reordered.
-    # 
+    #
     # Originally developed by Rose, Tarjan, and Leuker, *Algorithmic
     # aspects of vertex elimination on graphs*, SIAM J. Comput. 5, 266-283
     # MR53 #12077
@@ -226,30 +226,30 @@ module Graphy
     def lexicograph_bfs(&block)
       lex_q = Graphy::Search::LexicographicQueue.new(vertices)
       result = []
-      num_vertices.times do               
+      num_vertices.times do
         v = lex_q.pop
         result.unshift(v)
-        lex_q.add_lexeme(adjacent(v))            
+        lex_q.add_lexeme(adjacent(v))
       end
       result.each { |r| block.call(r) } if block
       result
     end
 
     # A* Heuristic best first search.
-    # 
+    #
     # `start` is the starting vertex for the search.
     #
-    # `func` is a `Proc` that when passed a vertex returns the heuristic 
+    # `func` is a `Proc` that when passed a vertex returns the heuristic
     # weight of sending the path through that node. It must always
     # be equal to or less than the true cost.
-    # 
-    # `options` are mostly callbacks passed in as a hash, the default block is 
+    #
+    # `options` are mostly callbacks passed in as a hash, the default block is
     # `:discover_vertex` and the weight is assumed to be the label for the {Arc}.
     # The following options are valid, anything else is ignored:
     #
     # * `:weight` => can be a `Proc`, or anything else is accessed using the `[]` for the
     #     the label or it defaults to using
-    #     the value stored in the label for the {Arc}. If it is a `Proc` it will 
+    #     the value stored in the label for the {Arc}. If it is a `Proc` it will
     #     pass the edge to the proc and use the resulting value.
     # * `:discover_vertex` => `Proc` invoked when a vertex is first discovered
     #   and is added to the open list.
@@ -259,12 +259,12 @@ module Graphy
     #   immediately after it is examined.
     # * `:edge_relaxed`    => `Proc` invoked on edge `(u,v) if d[u] + w(u,v) < d[v]`.
     # * `:edge_not_relaxed`=> `Proc` invoked if the edge is not relaxed (see above).
-    # * `:black_target`    => `Proc` invoked when a vertex that is on the closed 
+    # * `:black_target`    => `Proc` invoked when a vertex that is on the closed
     #     list is "rediscovered" via a more efficient path, and is re-added
     #     to the open list.
-    # * `:finish_vertex`    => Proc invoked on a vertex when it is added to the 
+    # * `:finish_vertex`    => Proc invoked on a vertex when it is added to the
     #     closed list, which happens after all of its out edges have been
-    #     examined. 
+    #     examined.
     #
     # Can also be called like `astar_examine_edge {|e| ... }` or
     # `astar_edge_relaxed {|e| ... }` for any of the callbacks.
@@ -272,9 +272,9 @@ module Graphy
     # The criteria for expanding a vertex on the open list is that it has the
     # lowest `f(v) = g(v) + h(v)` value of all vertices on open.
     #
-    # The time complexity of A* depends on the heuristic. It is exponential 
+    # The time complexity of A* depends on the heuristic. It is exponential
     # in the worst case, but is polynomial when the heuristic function h
-    # meets the following condition: `|h(x) - h*(x)| < O(log h*(x))` where `h*`  
+    # meets the following condition: `|h(x) - h*(x)| < O(log h*(x))` where `h*`
     # is the optimal heuristic, i.e. the exact cost to get from `x` to the `goal`.
     #
     # See also: [A* search algorithm](http://en.wikipedia.org/wiki/A*_search_algorithm) on Wikipedia.
@@ -317,7 +317,7 @@ module Graphy
           w = cost(e, options[:weight])
           raise ArgumentError unless w
 
-          if d[v].nil? or (w + d[u]) < d[v] 
+          if d[v].nil? or (w + d[u]) < d[v]
             options.handle_callback(:edge_relaxed, e)
             d[v] = w + d[u]
             f[v] = d[v] + func.call(v)
@@ -325,9 +325,9 @@ module Graphy
 
             unless color[v] == :gray
               options.handle_callback(:black_target, v) if color[v] == :black
-              color[v] = :gray 
+              color[v] = :gray
               options.handle_callback(:discover_vertex, v)
-              queue.push v, f[v] 
+              queue.push v, f[v]
               block.call(v) if block
             end
           else
@@ -354,12 +354,12 @@ module Graphy
     # @return [Array(vertices), call, nil] an array of nodes in path, or calls block on all nodes,
     #   upon failure returns `nil`
     def best_first(start, goal, options, zero = 0, &block)
-      func = Proc.new { |v| zero }   
+      func = Proc.new { |v| zero }
       astar(start, goal, func, options, &block)
     end
 
     # @private
-    alias_method :pre_search_method_missing, :method_missing 
+    alias_method :pre_search_method_missing, :method_missing
     def method_missing(sym, *args, &block)
       m1 = /^dfs_(\w+)$/.match(sym.to_s)
       dfs((args[0] || {}).merge({ m1.captures[0].to_sym => block })) if m1
@@ -401,7 +401,7 @@ module Graphy
         # Loop till the search iterator exhausts the waiting list.
         visited_edges = {} # This prevents retraversing edges in undirected graphs.
         until waiting.empty?
-          graphy_search_iteration(options, waiting, color_map, visited_edges, result, op == :pop) 
+          graphy_search_iteration(options, waiting, color_map, visited_edges, result, op == :pop)
         end
         # Waiting for the list to be exhausted, check if a new root vertex is available.
         u = color_map.detect { |key,value| value == :unvisited }
@@ -418,7 +418,7 @@ module Graphy
     def graphy_search_iteration(options, waiting, color_map, visited_edges, result, recursive = false)
       # Fetch the next waiting vertex in the list.
       #sleep
-      u = waiting.next  
+      u = waiting.next
       options.handle_vertex(:enter_vertex, u)
       result << u
 
@@ -432,15 +432,15 @@ module Graphy
 
         case color_map[v]
           # If it's unvisited, it goes into the waiting list.
-        when :unvisited 
+        when :unvisited
           options.handle_edge(:tree_edge, e)
           color_map[v] = :waiting
-          waiting.push(v) 
+          waiting.push(v)
           # If it's recursive (i.e. dfs), then call self.
           graphy_search_iteration(options, waiting, color_map, visited_edges, result, true) if recursive
-        when :waiting 
+        when :waiting
           options.handle_edge(:back_edge, e)
-        else 
+        else
           options.handle_edge(:forward_edge, e)
         end
       end
@@ -470,8 +470,8 @@ module Graphy
     # @return [Array] a linear representation of the sorted graph
     def topsort(start = nil, &block)
       result  = []
-      go      = true 
-      back    = Proc.new { |e| go = false } 
+      go      = true
+      back    = Proc.new { |e| go = false }
       push    = Proc.new { |v| result.unshift(v) if go }
       start ||= vertices[0]
       dfs({ :exit_vertex => push, :back_edge => back, :start => start })
@@ -506,6 +506,5 @@ module Graphy
     def cyclic?
       not acyclic?
     end
-
-  end # Search 
-end # Graphy
+  end
+end

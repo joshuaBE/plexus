@@ -1,14 +1,12 @@
 module Graphy
-
   # Arc includes classes for representing egdes of directed and
   # undirected graphs. There is no need for a Vertex class, because any ruby
   # object can be a vertex of a graph.
   #
-  # Arc's base is a Struct with a :source, a :target and a :label
+  # Arc's base is a Struct with a :source, a :target and a :label.
   Struct.new("ArcBase", :source, :target, :label)
 
   class Arc < Struct::ArcBase
-
     def initialize(p_source, p_target, p_label = nil)
       super(p_source, p_target, p_label)
     end
@@ -20,7 +18,9 @@ module Graphy
     alias == eql?
 
     # Returns (v,u) if self == (u,v).
-    def reverse() self.class.new(target, source, label); end
+    def reverse()
+      self.class.new(target, source, label)
+    end
 
     # Sort support.
     def <=>(rhs)
@@ -32,18 +32,14 @@ module Graphy
       l = label ? " '#{label.to_s}'" : ''
       "(#{source}-#{target}#{l})"
     end
-    
+
     # Hash is defined in such a way that label is not
     # part of the hash value
     # FIXME: I had to get rid of that in order to make to_dot_graph
     # work, but I can't figure it out (doesn't show up in the stack!)
-    #def hash
-      #puts "--- #{caller}"
-      ##puts source.inspect
-      ##puts target.inspect
-      #source.hash ^ (target.hash + 1)
-      #puts "---"
-    #end
+    def hash
+      source.hash ^ (target.hash + 1)
+    end
 
     # Shortcut constructor.
     #
@@ -51,15 +47,13 @@ module Graphy
     def self.[](p_source, p_target, p_label = nil)
       new(p_source, p_target, p_label)
     end
-    
-    #def inspect
-      #"#{self.class.to_s}[#{source.inspect},#{target.inspect},#{label.inspect}]"
-    #end
-    
-  end # Arc
-  
+
+    def inspect
+      "#{self.class.to_s}[#{source.inspect},#{target.inspect},#{label.inspect}]"
+    end
+  end
+
   class MultiArc < Arc
     include ArcNumber
   end
-
-end # Graphy
+end

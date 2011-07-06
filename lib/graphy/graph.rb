@@ -1,5 +1,4 @@
 module Graphy
-
   # Using the methods required by the {GraphAPI}, it implements all the
   # *basic* functions of a {Graph} using *only* functions
   # requested in {GraphAPI}. The process is under the control of the pattern
@@ -9,7 +8,6 @@ module Graphy
   # An actual, complete implementation still needs to be done using this cheap result,
   # hence {Digraph}, {UndirectedGraph} and their roomates.
   module GraphBuilder
-
     include Enumerable
     include Labels
     include Dot
@@ -53,7 +51,7 @@ module Graphy
       end
 
       implementation_initialize(*params)
-    end     
+    end
 
     # Shortcut for creating a Graph.
     #
@@ -61,7 +59,7 @@ module Graphy
     #
     #     Graphy::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s
     #     # => "(1-2)(2-3)(2-4)(4-5)"
-    # 
+    #
     # Using a Hash for specifying labels along the way:
     #
     #     Graphy::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (note: do not use for Multi or Pseudo graphs)
@@ -77,12 +75,12 @@ module Graphy
             add_edge!(edge_class[k[0],k[1],nil,v])
           else
             add_edge!(edge_class[k[0],k[1],v])
-          end 
+          end
         end
         #FIXME, edge class shouldn't be assume here!!!
       elsif a[0].is_a? Graphy::Arc
         a.each{ |e| add_edge!(e); self[e] = e.label}
-      elsif a.size % 2 == 0    
+      elsif a.size % 2 == 0
         0.step(a.size-1, 2) {|i| add_edge!(a[i], a[i+1])}
       else
         raise ArgumentError
@@ -110,7 +108,7 @@ module Graphy
       x = self.class.new(self)
       x.add_edge!(u, v, l)
     end
-    alias add_arc add_edge  
+    alias add_arc add_edge
 
     # Non destructive version of {AdjacencyGraphBuilder#remove_vertex!} (works on a copy of the graph).
     #
@@ -130,7 +128,7 @@ module Graphy
       x = self.class.new(self)
       x.remove_edge!(u, v)
     end
-    alias remove_arc remove_edge  
+    alias remove_arc remove_edge
 
     # Computes the adjacent portions of the Graph.
     #
@@ -154,7 +152,6 @@ module Graphy
     end
     #FIXME: This is a hack around a serious problem
     alias graph_adjacent adjacent
-
 
     # Adds all specified vertices to the vertex set.
     #
@@ -186,7 +183,7 @@ module Graphy
       a.each { |edge| add_edge!(edge) }
       self
     end
-    alias add_arcs! add_edges!  
+    alias add_arcs! add_edges!
 
     # Same as {GraphBuilder#add_egdes! add_edges!} but works on a copy of the receiver.
     #
@@ -274,7 +271,7 @@ module Graphy
     # @return [Boolean]
     def edge?(*args)
       edges.include?(edge_convert(*args))
-    end  
+    end
     alias arc? edge?
     alias has_edge? edge?
     alias has_arc? edge?
@@ -343,12 +340,11 @@ module Graphy
     #
     # @return [Boolean]
     def empty?
-      puts "yan"
       vertices.size.zero?
     end
 
     # Returns true if the given object is a vertex or an {Arc arc} of the graph.
-    # 
+    #
     # @param [vertex, Arc] x
     def include?(x)
       x.is_a?(Graphy::Arc) ? edge?(x) : vertex?(x)
@@ -359,11 +355,11 @@ module Graphy
     #
     # This is equivalent to {GraphBuilder#adjacent adjacent}, but the type is based on the
     # type of the specified object.
-    # 
+    #
     # @param [vertex, Arc] x
     # @param [Symbol] direction (:all) can be either `:all`, `:in` or `:out`
     def neighborhood(x, direction = :all)
-      adjacent(x, :direction => direction, :type => ((x.is_a? Graphy::Arc) ? :edges : :vertices )) 
+      adjacent(x, :direction => direction, :type => ((x.is_a? Graphy::Arc) ? :edges : :vertices ))
     end
 
     # Union of all neighborhoods of vertices (or edges) in the Enumerable x minus the contents of x.
@@ -373,8 +369,8 @@ module Graphy
     # @param [vertex] x
     # @param [Symbol] direction can be either `:all`, `:in` or `:out`
     def set_neighborhood(x, direction = :all)
-      x.inject(Set.new) { |a,v| a.merge(neighborhood(v, idirection))}.reject { |v2| x.include?(v2) }
-    end  
+      x.inject(Set.new) { |a,v| a.merge(neighborhood(v, direction))}.reject { |v2| x.include?(v2) }
+    end
 
     # Union of all {GraphBuilder#set_neighborhood set_neighborhoods} reachable
     # among the specified edges.
@@ -387,7 +383,7 @@ module Graphy
     # @param [Symbol] direction can be `:all`, `:in`, or `:out`
     def closed_pth_neighborhood(w, p, direction = :all)
       if    p <= 0
-        w 
+        w
       elsif p == 1
         (w + set_neighborhood(w, direction)).uniq
       else
@@ -410,10 +406,10 @@ module Graphy
         x
       elsif p == 1
         set_neighborhood(x,direction)
-      else  
+      else
         set_neighborhood(open_pth_neighborhood(x, p-1, direction), direction) -
         closed_pth_neighborhood(x, p-1, direction)
-      end    
+      end
     end
 
     # Returns the number of out-edges (for directed graphs) or the number of
@@ -451,7 +447,7 @@ module Graphy
     end
 
     # Minimum out-degree of the graph.
-    # 
+    #
     # @return [Integer, nil] returns `nil` if the graph is empty
     def min_out_degree
       return nil if to_a.empty?
@@ -531,9 +527,9 @@ module Graphy
     def eql?(g)
       return false unless g.is_a? Graphy::Graph
 
-      (g.directed?   == self.directed?)  and 
+      (directed?     == g.directed?)     and
       (vertices.sort == g.vertices.sort) and
-      (g.edges.sort  == edges.sort)
+      (edges.sort    == g.edges.sort)
     end
     alias == eql?
 
@@ -544,8 +540,8 @@ module Graphy
     def merge(other)
       other.vertices.each { |v| add_vertex!(v)       }
       other.edges.each    { |e| add_edge!(e)         }
-      other.edges.each    { |e| add_edge!(e.reverse) } if directed? and !other.directed? 
-      self 
+      other.edges.each    { |e| add_edge!(e.reverse) } if directed? and !other.directed?
+      self
     end
 
     # A synonym for {GraphBuilder#merge merge}, but doesn't modify the current graph.
@@ -567,7 +563,7 @@ module Graphy
     # Removes all vertices in the specified graph.
     #
     # @param [Graph, Arc] other
-    # @return [Graph] 
+    # @return [Graph]
     def -(other)
       case other
       when Graphy::Graph
@@ -599,12 +595,12 @@ module Graphy
     # @param [Array(vertex)] v
     # @return [Graph]
     def induced_subgraph(v)
-      edges.inject(self.class.new) do |a,e| 
+      edges.inject(self.class.new) do |a,e|
         (v.include?(e.source) and v.include?(e.target)) ? (a << e) : a
       end
     end
 
-    #def inspect
+    def inspect
       ## FIXME: broken, it's not updated. The issue's not with inspect, but it's worth mentionning here.
       ## Example:
       ##     dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
@@ -613,12 +609,12 @@ module Graphy
       ##     dg.vertex?("yosh")
       ##     # => true
       ##     dg
-      ##     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]] 
+      ##     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
       ## the new vertex doesn't show up.
       ## Actually this version of inspect is far too verbose IMO :)
-      #l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
-      #self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
-    #end
+      l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
+      self.class.to_s + '[' + edges.map {|e| e.inspect}.join(', ') + ']' + (l && l != '' ? '.'+l : '')
+    end
 
     private
 
@@ -626,6 +622,5 @@ module Graphy
     def edge_convert(*args)
       args[0].is_a?(Graphy::Arc) ? args[0] : edge_class[*args]
     end
-
-  end # Graph
-end # Graphy
+  end
+end
