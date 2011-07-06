@@ -1,4 +1,4 @@
-# Plexus (aka. plexus). A framework for graph theory, graph data structures and associated algorithms.
+# Plexus (was Graphy). A framework for graph theory, graph data structures and associated algorithms.
 
 Graph algorithms currently provided are:
 
@@ -66,85 +66,107 @@ insertion and removal at the cost of extra space overhead, etc.
 
 Using IRB, first require the library:
 
-    require 'rubygems' # only if you are using ruby 1.8.x
-    require 'plexus'
+``` bash
+require 'rubygems' # only if you are using ruby 1.8.x
+require 'plexus'
+```
 
 If you'd like to include all the classes in the current scope (so you
 don't have to prefix with `Plexus::`), just:
 
-    include Plexus
+``` bash
+include Plexus
+```
 
 Let's play with the library a bit in IRB:
 
-    >> dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
-    => Plexus::Digraph[[2, 3], [1, 6], [2, 4], [4, 5], [1, 2], [6, 4]]
+``` bash
+>> dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
+=> Plexus::Digraph[[2, 3], [1, 6], [2, 4], [4, 5], [1, 2], [6, 4]]
+```
 
 A few properties of the graph we just created:
 
-    >> dg.directed?
-    => true
-    >> dg.vertex?(4)
-    => true
-    >> dg.edge?(2,4)
-    => true
-    >> dg.edge?(4,2)
-    => false
-    >> dg.vertices
-    => [1, 2, 3, 4, 5, 6]
+``` bash
+>> dg.directed?
+=> true
+>> dg.vertex?(4)
+=> true
+>> dg.edge?(2,4)
+=> true
+>> dg.edge?(4,2)
+=> false
+>> dg.vertices
+=> [1, 2, 3, 4, 5, 6]
+```
 
 Every object could be a vertex, even the class object `Object`:
 
-    >> dg.vertex?(Object)
-    => false
+``` bash
+>> dg.vertex?(Object)
+=> false
 
-    >> UndirectedGraph.new(dg).edges.sort.to_s
-    => "[Plexus::Edge[1,2,nil], Plexus::Edge[2,3,nil], Plexus::Edge[2,4,nil],
-         Plexus::Edge[4,5,nil], Plexus::Edge[1,6,nil], Plexus::Edge[6,4,nil]]"
+>> UndirectedGraph.new(dg).edges.sort.to_s
+=> "[Plexus::Edge[1,2,nil], Plexus::Edge[2,3,nil], Plexus::Edge[2,4,nil],
+      Plexus::Edge[4,5,nil], Plexus::Edge[1,6,nil], Plexus::Edge[6,4,nil]]"
+```
 
 Add inverse edge `(4-2)` to directed graph:
 
-    >> dg.add_edge!(4,2)
-    => Plexus::DirectedGraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
-                             Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[4,2,nil],
-                             Plexus::Arc[6,4,nil]]
+``` bash
+>> dg.add_edge!(4,2)
+=> Plexus::DirectedGraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
+                          Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[4,2,nil],
+                          Plexus::Arc[6,4,nil]]
+```
 
 `(4-2) == (2-4)` in the undirected graph (4-2 doesn't show up):
 
+``` bash
     >> UndirectedGraph.new(dg).edges.sort.to_s
     => "[Plexus::Edge[1,2,nil], Plexus::Edge[2,3,nil], Plexus::Edge[2,4,nil],
          Plexus::Edge[4,5,nil], Plexus::Edge[1,6,nil], Plexus::Edge[6,4,nil]]"
+```
 
 `(4-2) != (2-4)` in directed graphs (both show up):
 
-    >> dg.edges.sort.to_s
-    => "[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
-         Plexus::Arc[2,4,nil], Plexus::Arc[4,2,nil], Plexus::Arc[4,5,nil],
-         Plexus::Arc[6,4,nil]]"
+``` bash
+>> dg.edges.sort.to_s
+=> "[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
+      Plexus::Arc[2,4,nil], Plexus::Arc[4,2,nil], Plexus::Arc[4,5,nil],
+      Plexus::Arc[6,4,nil]]"
 
-    >> dg.remove_edge! 4,2
-    => Plexus::DirectedGraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
-                             Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[6,4,nil]]
+>> dg.remove_edge! 4,2
+=> Plexus::DirectedGraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil],
+                          Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[6,4,nil]]
+```
 
 Topological sorting is realized with an iterator:
 
-    >> dg.topsort
-    => [1, 6, 2, 4, 5, 3]
-    >> y = 0; dg.topsort { |v| y += v }; y
-    => 21
+``` bash
+>> dg.topsort
+=> [1, 6, 2, 4, 5, 3]
+>> y = 0; dg.topsort { |v| y += v }; y
+=> 21
+```
 
 You can use DOT to visualize the graph:
 
-    >> require 'plexus/dot'
-    >> dg.write_to_graphic_file('jpg','visualize')
+``` bash
+>> require 'plexus/dot'
+>> dg.write_to_graphic_file('jpg','visualize')
+```
 
 Here's an example showing the module inheritance hierarchy:
 
-    >> module_graph = Digraph.new
-    >> ObjectSpace.each_object(Module) do |m|
-    >>   m.ancestors.each {|a| module_graph.add_edge!(m,a) if m != a}
-    >> end
-    >> gv = module_graph.vertices.select {|v| v.to_s.match(/Plexus/) }
-    >> module_graph.induced_subgraph(gv).write_to_graphic_file('jpg','module_graph')
+``` bash
+>> module_graph = Digraph.new
+>> ObjectSpace.each_object(Module) do |m|
+>>   m.ancestors.each {|a| module_graph.add_edge!(m,a) if m != a}
+>> end
+>> gv = module_graph.vertices.select {|v| v.to_s.match(/Plexus/) }
+>> module_graph.induced_subgraph(gv).write_to_graphic_file('jpg','module_graph')
+```
 
 Look for more in the examples directory.
 
