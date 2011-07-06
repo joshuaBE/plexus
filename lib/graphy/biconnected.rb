@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
 
   # Biconnected is a module for adding the biconnected algorithm to 
   # UndirectedGraphs
@@ -81,4 +81,4 @@ module Graphy
     end # biconnected
 
   end # Biconnected
-end # Graphy
+end # Plexus

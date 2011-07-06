@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # Digraph is a directed graph which is a finite set of vertices
   # and a finite set of edges connecting vertices. It cannot contain parallel
   # edges going from the same source vertex to the same target. It also
@@ -25,11 +25,11 @@ module Graphy
 
       # A digraph uses the Arc class for edges.
       #
-      # @return [Graphy::MultiArc, Graphy::Arc] `Graphy::MultiArc` if the graph allows for parallel edges,
-      #   `Graphy::Arc` otherwise.
+      # @return [Plexus::MultiArc, Plexus::Arc] `Plexus::MultiArc` if the graph allows for parallel edges,
+      #   `Plexus::Arc` otherwise.
       #
       def edge_class
-        @parallel_edges ? Graphy::MultiArc : Graphy::Arc
+        @parallel_edges ? Plexus::MultiArc : Plexus::Arc
       end
 
       # Reverse all edges in a graph.

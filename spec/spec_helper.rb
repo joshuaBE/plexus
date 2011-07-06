@@ -1,7 +1,7 @@
-require File.expand_path("../../lib/graphy.rb",  __FILE__)
+require File.expand_path("../../lib/plexus.rb",  __FILE__)
 
-require 'graphy'
-include Graphy
+require 'plexus'
+include Plexus
 
 module AncestryHelper
   # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles

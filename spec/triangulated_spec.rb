@@ -100,7 +100,7 @@ describe "Triangulated" do #:nodoc:
   
   describe "lexicographic_queue" do
     it do
-      q = Graphy::Search::LexicographicQueue.new([1,2,3,4,5,6,7,8,9])
+      q = Plexus::Search::LexicographicQueue.new([1,2,3,4,5,6,7,8,9])
       q.pop.should == 9
       q.add_lexeme([3,4,5,6,7,8])
       q.pop.should == 8

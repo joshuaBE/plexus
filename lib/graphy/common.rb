@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
 
   # This class defines a cycle graph of size n.
   # This is easily done by using the base Graph
@@ -23,12 +23,12 @@ module Graphy
     end
 
     def edge?(u,v = nil)
-      u, v = [u.source, v.target] if u.is_a? Graphy::Arc
+      u, v = [u.source, v.target] if u.is_a? Plexus::Arc
       vertex?(u) && vertex?(v) && ((v-u == 1) or (u == @size && v = 1))
     end
 
     def edges
-      Array.new(@size) { |i| Graphy::Edge[i+1, (i+1) == @size ? 1 : i+2]}
+      Array.new(@size) { |i| Plexus::Edge[i+1, (i+1) == @size ? 1 : i+2]}
     end
   end # CycleBuilder
 
@@ -49,15 +49,15 @@ module Graphy
       return @edges if @edges      # cache edges
       @edges = []
       @size.times do |u|
-        @size.times { |v| @edges << Graphy::Edge[u+1, v+1]}
+        @size.times { |v| @edges << Plexus::Edge[u+1, v+1]}
       end
       @edges
     end
 
     def edge?(u, v = nil)
-      u, v = [u.source, v.target] if u.kind_of? Graphy::Arc
+      u, v = [u.source, v.target] if u.kind_of? Plexus::Arc
       vertex?(u) && vertex?(v)
     end
   end # CompleteBuilder
 
-end # Graphy
+end # Plexus

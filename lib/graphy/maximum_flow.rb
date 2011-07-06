@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   class Network
     include DigraphBuilder
 
@@ -74,4 +74,4 @@ module Graphy
 
     end # MaximumFlow
   end # GraphBuilder
-end # Graphy
+end # Plexus

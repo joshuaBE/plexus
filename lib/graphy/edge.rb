@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # An undirected edge is simply an undirected pair (source, target) used in
   # undirected graphs. Edge[u,v] == Edge[v,u]
   class Edge < Arc

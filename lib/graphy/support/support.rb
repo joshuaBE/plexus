@@ -1,9 +1,9 @@
-module Graphy
+module Plexus
   # Errors
   # TODO FIXME: must review all raise lines and streamline things
   
   # Base error class for the library.
-  class GraphyError < StandardError; end
+  class PlexusError < StandardError; end
   
-  class NoArcError < GraphyError; end
+  class NoArcError < PlexusError; end
 end

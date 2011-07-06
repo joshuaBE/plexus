@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # A generic {GraphBuilder Graph} class you can inherit from.
   class Graph;                         include GraphBuilder;                 end
 

@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
 
   # This module provides the basic routines needed to implement the specialized builders:
   # {DigraphBuilder}, {UndirectedGraphBuilder}, {DirectedPseudoGraphBuilder},
@@ -42,7 +42,7 @@ module Graphy
       end
 
       # Copy any given graph into this graph.
-      params.select { |p| p.is_a? Graphy::GraphBuilder }.each do |g|
+      params.select { |p| p.is_a? Plexus::GraphBuilder }.each do |g|
         g.edges.each do |e| 
           add_edge!(e)
           edge_label_set(e, edge_label(e)) if edge_label(e)
@@ -75,7 +75,7 @@ module Graphy
     # @param [vertex] v (nil)
     # @return [Boolean]
     def edge?(u, v = nil)
-      u, v = u.source, u.target if u.is_a? Graphy::Arc
+      u, v = u.source, u.target if u.is_a? Plexus::Arc
       vertex?(u) and @vertex_dict[u].include?(v)
     end
 
@@ -106,7 +106,7 @@ module Graphy
     #   @return [AdjacencyGraph] `self`
     def add_edge!(u, v = nil, l = nil, n = nil)
       n = u.number if u.class.include? ArcNumber and n.nil?
-      u, v, l = u.source, u.target, u.label if u.is_a? Graphy::Arc
+      u, v, l = u.source, u.target, u.label if u.is_a? Plexus::Arc
 
       return self if not @allow_loops and u == v
 
@@ -144,10 +144,10 @@ module Graphy
     # Removes an edge from the graph.
     #
     # Can be called with both source and target as vertex,
-    # or with source and object of {Graphy::Arc} derivation.
+    # or with source and object of {Plexus::Arc} derivation.
     #
     # @overload remove_edge!(a)
-    #   @param [Graphy::Arc] a
+    #   @param [Plexus::Arc] a
     #   @return [AdjacencyGraph] `self`
     #   @raise [ArgumentError] if parallel edges are enabled
     # @overload remove_edge!(u, v)
@@ -156,7 +156,7 @@ module Graphy
     #   @return [AdjacencyGraph] `self`
     #   @raise [ArgumentError] if parallel edges are enabled and the {ArcNumber} of `u` is zero
     def remove_edge!(u, v = nil)
-      unless u.is_a? Graphy::Arc
+      unless u.is_a? Plexus::Arc
         raise ArgumentError if @parallel_edges
         u = edge_class[u,v]
       end
@@ -206,7 +206,7 @@ module Graphy
     # @fixme
     def adjacent(x, options = {})
       options[:direction] ||= :out
-      if !x.is_a?(Graphy::Arc) and (options[:direction] == :out || !directed?)
+      if !x.is_a?(Plexus::Arc) and (options[:direction] == :out || !directed?)
         if options[:type] == :edges
           i = -1
           @parallel_edges ?
@@ -221,4 +221,4 @@ module Graphy
     end
 
   end # Adjacency Graph
-end # Graphy
+end # Plexus

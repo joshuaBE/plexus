@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module DirectedGraphBuilder
 
     # This module provides algorithms computing distance between
@@ -164,4 +164,4 @@ module Graphy
 
     end # Distance
   end # DirectedGraph
-end # Graphy
+end # Plexus

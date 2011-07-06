@@ -28,51 +28,51 @@
 
 require 'set'
 
-module Graphy
-  # Graphy internals: graph builders and additionnal behaviors
-  autoload :GraphAPI,                     'graphy/graph_api'
+module Plexus
+  # Plexus internals: graph builders and additionnal behaviors
+  autoload :GraphAPI,                     'plexus/graph_api'
 
-  autoload :GraphBuilder,                 'graphy/graph'
-  autoload :AdjacencyGraphBuilder,        'graphy/adjacency_graph'
+  autoload :GraphBuilder,                 'plexus/graph'
+  autoload :AdjacencyGraphBuilder,        'plexus/adjacency_graph'
 
-  autoload :DirectedGraphBuilder,         'graphy/directed_graph'
-  autoload :DigraphBuilder,               'graphy/directed_graph'
-  autoload :DirectedPseudoGraphBuilder,   'graphy/directed_graph'
-  autoload :DirectedMultiGraphBuilder,    'graphy/directed_graph'
+  autoload :DirectedGraphBuilder,         'plexus/directed_graph'
+  autoload :DigraphBuilder,               'plexus/directed_graph'
+  autoload :DirectedPseudoGraphBuilder,   'plexus/directed_graph'
+  autoload :DirectedMultiGraphBuilder,    'plexus/directed_graph'
 
-  autoload :UndirectedGraphBuilder,       'graphy/undirected_graph'
-  autoload :UndirectedPseudoGraphBuilder, 'graphy/undirected_graph'
-  autoload :UndirectedMultiGraphBuilder,  'graphy/undirected_graph'
+  autoload :UndirectedGraphBuilder,       'plexus/undirected_graph'
+  autoload :UndirectedPseudoGraphBuilder, 'plexus/undirected_graph'
+  autoload :UndirectedMultiGraphBuilder,  'plexus/undirected_graph'
 
-  autoload :Arc,                          'graphy/arc'
-  autoload :ArcNumber,                    'graphy/arc_number'
-  autoload :Biconnected,                  'graphy/biconnected'
-  autoload :ChinesePostman,               'graphy/chinese_postman'
-  autoload :Common,                       'graphy/common'
-  autoload :Comparability,                'graphy/comparability'
+  autoload :Arc,                          'plexus/arc'
+  autoload :ArcNumber,                    'plexus/arc_number'
+  autoload :Biconnected,                  'plexus/biconnected'
+  autoload :ChinesePostman,               'plexus/chinese_postman'
+  autoload :Common,                       'plexus/common'
+  autoload :Comparability,                'plexus/comparability'
 
-  autoload :Dot,                          'graphy/dot'
-  autoload :Edge,                         'graphy/edge'
-  autoload :Labels,                       'graphy/labels'
-  autoload :MaximumFlow,                  'graphy/maximum_flow'
-  #autoload :Rdot,                        'graphy/dot'
-  autoload :Search,                       'graphy/search'
-  autoload :StrongComponents,             'graphy/strong_components'
+  autoload :Dot,                          'plexus/dot'
+  autoload :Edge,                         'plexus/edge'
+  autoload :Labels,                       'plexus/labels'
+  autoload :MaximumFlow,                  'plexus/maximum_flow'
+  #autoload :Rdot,                        'plexus/dot'
+  autoload :Search,                       'plexus/search'
+  autoload :StrongComponents,             'plexus/strong_components'
 
-  # Graphy classes
-  autoload :AdjacencyGraph,               'graphy/classes/graph_classes'
-  autoload :DirectedGraph,                'graphy/classes/graph_classes'
-  autoload :Digraph,                      'graphy/classes/graph_classes'
-  autoload :DirectedPseudoGraph,          'graphy/classes/graph_classes'
-  autoload :DirectedMultiGraph,           'graphy/classes/graph_classes'
-  autoload :UndirectedGraph,              'graphy/classes/graph_classes'
-  autoload :UndirectedPseudoGraph,        'graphy/classes/graph_classes'
-  autoload :UndirectedMultiGraph,         'graphy/classes/graph_classes'
+  # Plexus classes
+  autoload :AdjacencyGraph,               'plexus/classes/graph_classes'
+  autoload :DirectedGraph,                'plexus/classes/graph_classes'
+  autoload :Digraph,                      'plexus/classes/graph_classes'
+  autoload :DirectedPseudoGraph,          'plexus/classes/graph_classes'
+  autoload :DirectedMultiGraph,           'plexus/classes/graph_classes'
+  autoload :UndirectedGraph,              'plexus/classes/graph_classes'
+  autoload :UndirectedPseudoGraph,        'plexus/classes/graph_classes'
+  autoload :UndirectedMultiGraph,         'plexus/classes/graph_classes'
 
   # ruby stdlib extensions
-  require 'graphy/ext'
+  require 'plexus/ext'
   # ruby 1.8.x/1.9.x compatibility
-  require 'graphy/ruby_compatibility'
+  require 'plexus/ruby_compatibility'
 end
 
 # Vendored libraries

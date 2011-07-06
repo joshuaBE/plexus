@@ -14,7 +14,7 @@
 The following list was present in GRATR, and items may (or may not) be added to this library:
 
 * Primal Dual for combinatorial optimization problems
-* Min-Max Flow 
+* Min-Max Flow
 * Near optimal traveling salesman problem
 * Orientation of undirected graphs
 * Undirected graphs from ActiveRecord

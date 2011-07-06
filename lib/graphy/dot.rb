@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module Dot
 
     #FIXME: don't really understood where we stand with the dot generators.
@@ -91,4 +91,4 @@ module Graphy
     alias as_dot_graphic write_to_graphic_file
 
   end # Dot
-end # module Graphy
+end # module Plexus

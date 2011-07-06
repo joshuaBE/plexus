@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # Using the methods required by the {GraphAPI}, it implements all the
   # *basic* functions of a {Graph} using *only* functions
   # requested in {GraphAPI}. The process is under the control of the pattern
@@ -27,7 +27,7 @@ module Graphy
 
     # Creates a generic graph.
     #
-    # @param [Hash(Graphy::Graph, Array)] *params initialization parameters.
+    # @param [Hash(Plexus::Graph, Array)] *params initialization parameters.
     #   See {AdjacencyGraphBuilder#implementation_initialize} for more details.
     # @return [Graph]
     def initialize(*params)
@@ -36,7 +36,7 @@ module Graphy
         # and the is_a? redefinition trick (instance_evaling) should be
         # completed by a clever way to check the actual class of p.
         # Maybe using ObjectSpace to get the available Graph classes?
-        !(p.is_a? Graphy::GraphBuilder or p.is_a? Array or p.is_a? Hash)
+        !(p.is_a? Plexus::GraphBuilder or p.is_a? Array or p.is_a? Hash)
       end
 
       args = params.last || {}
@@ -45,9 +45,9 @@ module Graphy
         self
       end.module_eval do
         # These inclusions trigger some validations checks by the way.
-        include(args[:implementation]       ? args[:implementation]       : Graphy::AdjacencyGraphBuilder)
-        include(args[:algorithmic_category] ? args[:algorithmic_category] : Graphy::DigraphBuilder       )
-        include Graphy::GraphAPI
+        include(args[:implementation]       ? args[:implementation]       : Plexus::AdjacencyGraphBuilder)
+        include(args[:algorithmic_category] ? args[:algorithmic_category] : Plexus::DigraphBuilder       )
+        include Plexus::GraphAPI
       end
 
       implementation_initialize(*params)
@@ -57,12 +57,12 @@ module Graphy
     #
     # Using an arry of implicit {Arc}, specifying the vertices:
     #
-    #     Graphy::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s
+    #     Plexus::Graph[1,2, 2,3, 2,4, 4,5].edges.to_a.to_s
     #     # => "(1-2)(2-3)(2-4)(4-5)"
     #
     # Using a Hash for specifying labels along the way:
     #
-    #     Graphy::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (note: do not use for Multi or Pseudo graphs)
+    #     Plexus::Graph[ [:a,:b] => 3, [:b,:c] => 4 ]  (note: do not use for Multi or Pseudo graphs)
     #
     # @param [Array, Hash] *a
     # @return [Graph]
@@ -71,14 +71,14 @@ module Graphy
         # Convert to edge class
         a[0].each do |k,v|
           #FIXME, edge class shouldn't be assume here!!!
-          if edge_class.include? Graphy::ArcNumber
+          if edge_class.include? Plexus::ArcNumber
             add_edge!(edge_class[k[0],k[1],nil,v])
           else
             add_edge!(edge_class[k[0],k[1],v])
           end
         end
         #FIXME, edge class shouldn't be assume here!!!
-      elsif a[0].is_a? Graphy::Arc
+      elsif a[0].is_a? Plexus::Arc
         a.each{ |e| add_edge!(e); self[e] = e.label}
       elsif a.size % 2 == 0
         0.step(a.size-1, 2) {|i| add_edge!(a[i], a[i+1])}
@@ -287,9 +287,9 @@ module Graphy
     # @param [vertex] target
     # @param [Symbol] direction (:all) constraint on the direction of adjacency; may be either `:in`, `:out` or `:all`
     def adjacent?(source, target, direction = :all)
-      if source.is_a? Graphy::Arc
+      if source.is_a? Plexus::Arc
         raise NoArcError unless edge? source
-        if target.is_a? Graphy::Arc
+        if target.is_a? Plexus::Arc
           raise NoArcError unless edge? target
           (direction != :out and source.source == target.target) or (direction != :in and source.target == target.source)
         else
@@ -298,7 +298,7 @@ module Graphy
         end
       else
         raise NoVertexError unless vertex? source
-        if target.is_a? Graphy::Arc
+        if target.is_a? Plexus::Arc
           raise NoArcError unless edge? target
           (direction != :out and source == target.target) or (direction != :in and source == target.source)
         else
@@ -347,7 +347,7 @@ module Graphy
     #
     # @param [vertex, Arc] x
     def include?(x)
-      x.is_a?(Graphy::Arc) ? edge?(x) : vertex?(x)
+      x.is_a?(Plexus::Arc) ? edge?(x) : vertex?(x)
     end
     alias has? include?
 
@@ -359,7 +359,7 @@ module Graphy
     # @param [vertex, Arc] x
     # @param [Symbol] direction (:all) can be either `:all`, `:in` or `:out`
     def neighborhood(x, direction = :all)
-      adjacent(x, :direction => direction, :type => ((x.is_a? Graphy::Arc) ? :edges : :vertices ))
+      adjacent(x, :direction => direction, :type => ((x.is_a? Plexus::Arc) ? :edges : :vertices ))
     end
 
     # Union of all neighborhoods of vertices (or edges) in the Enumerable x minus the contents of x.
@@ -525,7 +525,7 @@ module Graphy
 
     # Equality is defined to be same set of edges and directed?
     def eql?(g)
-      return false unless g.is_a? Graphy::Graph
+      return false unless g.is_a? Plexus::Graph
 
       (directed?     == g.directed?)     and
       (vertices.sort == g.vertices.sort) and
@@ -551,9 +551,9 @@ module Graphy
     def +(other)
       result = self.class.new(self)
       case other
-      when Graphy::Graph
+      when Plexus::Graph
         result.merge(other)
-      when Graphy::Arc
+      when Plexus::Arc
         result.add_edge!(other)
       else
         result.add_vertex!(other)
@@ -566,9 +566,9 @@ module Graphy
     # @return [Graph]
     def -(other)
       case other
-      when Graphy::Graph
+      when Plexus::Graph
         induced_subgraph(vertices - other.vertices)
-      when Graphy::Arc
+      when Plexus::Arc
         self.class.new(self).remove_edge!(other)
       else
         self.class.new(self).remove_vertex!(other)
@@ -605,11 +605,11 @@ module Graphy
       ## Example:
       ##     dg = Digraph[1,2, 2,3, 2,4, 4,5, 6,4, 1,6]
       ##     dg.add_vertices! 1, 5, "yosh"
-      ##     # => Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
+      ##     # => Plexus::Digraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil], Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[6,4,nil]]
       ##     dg.vertex?("yosh")
       ##     # => true
       ##     dg
-      ##     # =>Graphy::Digraph[Graphy::Arc[1,2,nil], Graphy::Arc[1,6,nil], Graphy::Arc[2,3,nil], Graphy::Arc[2,4,nil], Graphy::Arc[4,5,nil], Graphy::Arc[6,4,nil]]
+      ##     # =>Plexus::Digraph[Plexus::Arc[1,2,nil], Plexus::Arc[1,6,nil], Plexus::Arc[2,3,nil], Plexus::Arc[2,4,nil], Plexus::Arc[4,5,nil], Plexus::Arc[6,4,nil]]
       ## the new vertex doesn't show up.
       ## Actually this version of inspect is far too verbose IMO :)
       l = vertices.select { |v| self[v]}.map { |u| "vertex_label_set(#{u.inspect}, #{self[u].inspect})"}.join('.')
@@ -620,7 +620,7 @@ module Graphy
 
     # ?
     def edge_convert(*args)
-      args[0].is_a?(Graphy::Arc) ? args[0] : edge_class[*args]
+      args[0].is_a?(Plexus::Arc) ? args[0] : edge_class[*args]
     end
   end
 end

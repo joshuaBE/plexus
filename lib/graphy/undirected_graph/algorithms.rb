@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module UndirectedGraphBuilder
     module Algorithms
 
@@ -16,10 +16,10 @@ module Graphy
       def balanced?(v)  true;  end
 
       # UndirectedGraph uses Edge for the edge class.
-      def edge_class() @parallel_edges ? Graphy::MultiEdge : Graphy::Edge; end
+      def edge_class() @parallel_edges ? Plexus::MultiEdge : Plexus::Edge; end
 
       def remove_edge!(u, v=nil)
-        unless u.kind_of? Graphy::Arc
+        unless u.kind_of? Plexus::Arc
           raise ArgumentError if @parallel_edges 
           u = edge_class[u,v]
         end
@@ -87,4 +87,4 @@ module Graphy
 
     end # UndirectedGraphAlgorithms
   end # UndirectedGraphBuilder
-end # Graphy
+end # Plexus

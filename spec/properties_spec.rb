@@ -1,6 +1,6 @@
 
 require File.join(File.dirname(__FILE__), 'spec_helper')
-require 'graphy/dot'
+require 'plexus/dot'
 
 # This test runs the classes from Appendix F in 
 # _Algorithmic_Graph_Theory_and_Perfect_Graphs,

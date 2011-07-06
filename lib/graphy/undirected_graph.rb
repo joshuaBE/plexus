@@ -1,8 +1,8 @@
-module Graphy
+module Plexus
   module UndirectedGraphBuilder
-    autoload :Algorithms, "graphy/undirected_graph/algorithms"
+    autoload :Algorithms, "plexus/undirected_graph/algorithms"
 
-    include Graphy::GraphBuilder
+    include Plexus::GraphBuilder
     extends_host
 
     module ClassMethods
@@ -13,7 +13,7 @@ module Graphy
 
     def initialize(*params)
       args = (params.pop if params.last.kind_of? Hash) || {}
-      args[:algorithmic_category] = Graphy::UndirectedGraphBuilder::Algorithms
+      args[:algorithmic_category] = Plexus::UndirectedGraphBuilder::Algorithms
       super *(params << args)
     end
   end

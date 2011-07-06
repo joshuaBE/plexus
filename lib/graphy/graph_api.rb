@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # This module defines the minimum set of functions required to make a graph that can
   # use the algorithms defined by this library.
   #
@@ -32,4 +32,4 @@ module Graphy
     end
 
   end # GraphAPI
-end # Graphy
+end # Plexus

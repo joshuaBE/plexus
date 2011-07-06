@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # Arc includes classes for representing egdes of directed and
   # undirected graphs. There is no need for a Vertex class, because any ruby
   # object can be a vertex of a graph.

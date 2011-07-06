@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module StrongComponents
     # strong_components computes the strongly connected components
     # of a graph using Tarjan's algorithm based on DFS. See: Robert E. Tarjan
@@ -68,7 +68,7 @@ module Graphy
     # Compute transitive closure of a graph. That is any node that is reachable
     # along a path is added as a directed edge.
     def transitive_closure!
-      cgtc = condensation.graphy_inner_transitive_closure!
+      cgtc = condensation.plexus_inner_transitive_closure!
       cgtc.each do |cgv|
         cgtc.adjacent(cgv).each do |adj|
           cgv.each do |u| 
@@ -82,7 +82,7 @@ module Graphy
     # is not changed.
     def transitive_closure() self.class.new(self).transitive_closure!; end
 
-    def graphy_inner_transitive_closure!  # :nodoc:
+    def plexus_inner_transitive_closure!  # :nodoc:
       sort.reverse.each do |u| 
         adjacent(u).each do |v|
           adjacent(v).each {|w| add_edge!(u,w) unless edge?(u,w)}
@@ -90,4 +90,4 @@ module Graphy
       end; self
     end
   end # StrongComponents
-end # Graphy
+end # Plexus

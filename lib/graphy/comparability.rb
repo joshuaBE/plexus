@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module Comparability
     
     # A comparability graph is an UndirectedGraph that has a transitive
@@ -19,7 +19,7 @@ module Graphy
         if classification[e].nil?
           k += 1
           classification[e] = k; classification[e.reverse] = -k
-          comparability &&= graphy_comparability_explore(e, k, classification)
+          comparability &&= plexus_comparability_explore(e, k, classification)
         end
       end; [classification, comparability]
     end
@@ -34,12 +34,12 @@ module Graphy
    
     # Taken from Figure 5.10, on pg. 130 of Martin Golumbic's, _Algorithmic_Graph_
     # _Theory_and_Perfect_Graphs.
-    def graphy_comparability_explore(edge, k, classification, space='')
-      ret = graphy_comparability_explore_inner(edge, k, classification, :forward, space)
-      graphy_comparability_explore_inner(edge.reverse, k, classification, :backward, space) && ret
+    def plexus_comparability_explore(edge, k, classification, space='')
+      ret = plexus_comparability_explore_inner(edge, k, classification, :forward, space)
+      plexus_comparability_explore_inner(edge.reverse, k, classification, :backward, space) && ret
     end
     
-    def graphy_comparability_explore_inner(edge, k, classification, direction,space)
+    def plexus_comparability_explore_inner(edge, k, classification, direction,space)
       comparability = true  
       adj_target = adjacent(edge[1])
       adjacent(edge[0]).select do |mt|
@@ -50,14 +50,14 @@ module Graphy
         if classification[e].nil?
           classification[e] = k
           classification[e.reverse] = -k
-          comparability = graphy_comparability_explore(e, k, classification, '  '+space) && comparability
+          comparability = plexus_comparability_explore(e, k, classification, '  '+space) && comparability
         elsif classification[e] == -k
           classification[e] = k
-          graphy_comparability_explore(e, k, classification, '  '+space)
+          plexus_comparability_explore(e, k, classification, '  '+space)
           comparability = false
         end
       end; comparability
-    end # graphy_comparability_explore_inner
+    end # plexus_comparability_explore_inner
     
   end # Comparability
-end # Graphy
+end # Plexus

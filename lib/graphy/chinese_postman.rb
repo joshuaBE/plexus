@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   module ChinesePostman    
 
     # Returns the shortest walk that traverses all arcs at least
@@ -87,5 +87,5 @@ module Graphy
     end
 
   end # Chinese Postman
-end # Graphy
+end # Plexus
 

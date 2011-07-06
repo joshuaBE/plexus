@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # **Search/traversal algorithms.**
   #
   # This module defines a collection of search/traversal algorithms, in a unified API.
@@ -70,7 +70,7 @@ module Graphy
     #
     # @param [Hash] options
     def bfs(options = {}, &block)
-      graphy_search_helper(:shift, options, &block)
+      plexus_search_helper(:shift, options, &block)
     end
     alias :bread_first_search :bfs
 
@@ -78,7 +78,7 @@ module Graphy
     #
     # @param [Hash] options
     def dfs(options = {}, &block)
-      graphy_search_helper(:pop, options, &block)
+      plexus_search_helper(:pop, options, &block)
     end
     alias :depth_first_search :dfs
 
@@ -224,7 +224,7 @@ module Graphy
     #
     # @return [vertex]
     def lexicograph_bfs(&block)
-      lex_q = Graphy::Search::LexicographicQueue.new(vertices)
+      lex_q = Plexus::Search::LexicographicQueue.new(vertices)
       result = []
       num_vertices.times do
         v = lex_q.pop
@@ -375,7 +375,7 @@ module Graphy
     # @param [Symbol] op the algorithm to be used te perform the search
     # @param [Hash] options
     # @return [Object] result
-    def graphy_search_helper(op, options = {}, &block)
+    def plexus_search_helper(op, options = {}, &block)
       return nil if size == 0
       result = []
 
@@ -401,7 +401,7 @@ module Graphy
         # Loop till the search iterator exhausts the waiting list.
         visited_edges = {} # This prevents retraversing edges in undirected graphs.
         until waiting.empty?
-          graphy_search_iteration(options, waiting, color_map, visited_edges, result, op == :pop)
+          plexus_search_iteration(options, waiting, color_map, visited_edges, result, op == :pop)
         end
         # Waiting for the list to be exhausted, check if a new root vertex is available.
         u = color_map.detect { |key,value| value == :unvisited }
@@ -415,7 +415,7 @@ module Graphy
     # Performs a search iteration (step).
     #
     # @private
-    def graphy_search_iteration(options, waiting, color_map, visited_edges, result, recursive = false)
+    def plexus_search_iteration(options, waiting, color_map, visited_edges, result, recursive = false)
       # Fetch the next waiting vertex in the list.
       #sleep
       u = waiting.next
@@ -437,7 +437,7 @@ module Graphy
           color_map[v] = :waiting
           waiting.push(v)
           # If it's recursive (i.e. dfs), then call self.
-          graphy_search_iteration(options, waiting, color_map, visited_edges, result, true) if recursive
+          plexus_search_iteration(options, waiting, color_map, visited_edges, result, true) if recursive
         when :waiting
           options.handle_edge(:back_edge, e)
         else

@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
 
   # This implements a directed graph which does not allow parallel
   # edges nor loops. That is, only one arc per nodes couple,
@@ -7,8 +7,8 @@ module Graphy
   module DirectedGraphBuilder
     include GraphBuilder
 
-    autoload :Algorithms, "graphy/directed_graph/algorithms"
-    autoload :Distance,   "graphy/directed_graph/distance"
+    autoload :Algorithms, "plexus/directed_graph/algorithms"
+    autoload :Distance,   "plexus/directed_graph/distance"
 
     # FIXME: DRY this snippet, I didn't find a clever way to
     # to dit though

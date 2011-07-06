@@ -1,4 +1,4 @@
-module Graphy
+module Plexus
   # This module handles internal numbering of edges in order to differente between mutliple edges.
   module ArcNumber
 
@@ -49,4 +49,4 @@ module Graphy
     end
 
   end # ArcNumber
-end # Graphy
+end # Plexus

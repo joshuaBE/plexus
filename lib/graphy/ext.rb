@@ -28,9 +28,9 @@ class Object
   #
   #     class A; include Digraph; end
   #     a.singleton_class.ancestors
-  #     # => [Graphy::GraphAPI, Graphy::DirectedGraph::Algorithms, ...
-  #           Graphy::Labels, Enumerable, Object, Graphy, Kernel, BasicObject]
-  #     a.is_a? Graphy::Graph
+  #     # => [Plexus::GraphAPI, Plexus::DirectedGraph::Algorithms, ...
+  #           Plexus::Labels, Enumerable, Object, Plexus, Kernel, BasicObject]
+  #     a.is_a? Plexus::Graph
   #     # => true
   #
   # @param [Class] klass

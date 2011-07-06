@@ -1,26 +1,26 @@
-module Graphy
+module Plexus
   # This module add support for labels.
   #
   # The graph labeling process consist in assigning labels, traditionally represented
-  # by integers, to the edges or vertices, or both, of a graph. Graphy recommands you
+  # by integers, to the edges or vertices, or both, of a graph. Plexus recommands you
   # abide by this rule and do use integers as labels.
   #
-  # Some algorithms can make use of labeling (sea {Graphy::Search} for instance).
+  # Some algorithms can make use of labeling (sea {Plexus::Search} for instance).
   module Labels
 
     # Return a label for an edge or vertex.
     def [](u)
-      (u.is_a? Graphy::Arc) ? edge_label(u) : vertex_label(u)
+      (u.is_a? Plexus::Arc) ? edge_label(u) : vertex_label(u)
     end
 
     # Set a label for an edge or vertex.
     def []=(u, value)
-      (u.is_a? Graphy::Arc) ? edge_label_set(u, value) : vertex_label_set(u, value)
+      (u.is_a? Plexus::Arc) ? edge_label_set(u, value) : vertex_label_set(u, value)
     end
 
     # Delete a label entirely.
     def delete_label(u)
-      (u.is_a? Graphy::Arc) ? edge_label_delete(u) : vertex_label_delete(u)
+      (u.is_a? Plexus::Arc) ? edge_label_delete(u) : vertex_label_delete(u)
     end
 
     # Get the label for an edge.
@@ -42,7 +42,7 @@ module Graphy
 
     # Set the label for an edge.
     def edge_label_set(u, v = nil, l = nil, n = nil) 
-      u.is_a?(Graphy::Arc) ? l = v : u = edge_convert(u, v, n)
+      u.is_a?(Plexus::Arc) ? l = v : u = edge_convert(u, v, n)
       edge_label_dict[u] = l
       self
     end
@@ -110,4 +110,4 @@ module Graphy
     end
 
   end # Labels
-end # Graphy
+end # Plexus
