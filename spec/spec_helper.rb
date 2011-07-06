@@ -1,13 +1,9 @@
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-require 'graphy'
-require 'spec'
-require 'spec/autorun'
+require File.expand_path("../../lib/graphy.rb",  __FILE__)
 
+require 'graphy'
 include Graphy
 
 module AncestryHelper
-
   # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
   # Golumbic, 1980, Academic Press, page 38, Figure 2.6
   def assign_dfsnumber_ancestry(graph, dfsnumber, father, start)
@@ -20,7 +16,7 @@ module AncestryHelper
   end
 
   # "Algorithmic Graph Theory and Perfect Graphs", Martin Charles
-  # Golumbic, 1980, Academic Press, page 40, Figure 2.7 
+  # Golumbic, 1980, Academic Press, page 40, Figure 2.7
   def assign_bfsnumber_ancestry(graph, bfsnum, level, father, start)
     i = 0
     bfsnum.clear
@@ -29,7 +25,7 @@ module AncestryHelper
     rt = Proc.new {|v| level[v] = 0 }
     ev = Proc.new {|v| bfsnum[v]=(i+=1);level[v]=(level[father[v]]+1) if father[v]}
     te = Proc.new {|e| father[e.target] = e.source }
-    graph.dfs({:enter_vertex => ev, :tree_edge => te, 
+    graph.dfs({:enter_vertex => ev, :tree_edge => te,
                :root_vertex => rt, :start => start})
   end
 
@@ -51,6 +47,13 @@ module AncestryHelper
 
 end
 
-Spec::Runner.configure do |config|
+RSpec.configure do |config|
+  # Remove this line if you don't want RSpec's should and should_not
+  # methods or matchers
+  require 'rspec/expectations'
+  config.include RSpec::Matchers
   config.include AncestryHelper
+
+  # == Mock Framework
+  config.mock_with :rspec
 end
