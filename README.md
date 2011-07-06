@@ -177,7 +177,7 @@ See CHANGELOG.markdown
 
 ## License
 
-See LICENSE
+[MIT License](http://en.wikipedia.org/wiki/MIT_License). See the LICENSE file.
 
 [1]: http://gratr.rubyforge.org
 [2]: http://rgl.rubyforge.org
