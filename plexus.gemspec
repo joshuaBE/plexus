@@ -16,8 +16,12 @@ Graph algorithms currently provided are:
 * Rural Chinese Postman
 * Biconnected
 }
-  s.email = %q{bruce@codefluency.com}
+  s.email = %q{jd@vauguet.fr}
+  s.files = Dir["lib/**/*"] + Dir["vendor/**/*"] + Dir["spec/**/*"] + ["Gemfile", "LICENSE", "Rakefile", "README.md"]
+  s.homepage = %q{http://github.com/chikamichi/plexus}
+  s.add_dependency "activesupport"
   s.add_dependency "facets"
+  s.add_dependency "plexus"
   s.add_development_dependency "rspec"
   s.add_development_dependency "yard"
 end
