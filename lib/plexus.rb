@@ -30,8 +30,6 @@ require 'set'
 
 module Plexus
   # Plexus internals: graph builders and additionnal behaviors
-  autoload :GraphAPI,                     'plexus/graph_api'
-
   autoload :GraphBuilder,                 'plexus/graph'
   autoload :AdjacencyGraphBuilder,        'plexus/adjacency_graph'
 

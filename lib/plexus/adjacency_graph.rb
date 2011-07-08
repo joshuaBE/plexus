@@ -4,7 +4,7 @@ module Plexus
   # {DigraphBuilder}, {UndirectedGraphBuilder}, {DirectedPseudoGraphBuilder},
   # {UndirectedPseudoGraphBuilder}, {DirectedMultiGraphBuilder} and {UndirectedMultiGraphBuilder}
   # modules, each of them streamlining {AdjacencyGraphBuilder}'s behavior. Those
-  # implementations rely on the {GraphBuilder}, under the control of the {GraphAPI}.
+  # implementations rely on the {GraphBuilder}.
   module AdjacencyGraphBuilder
 
     # Defines a useful `push` -> `add` alias for arrays.

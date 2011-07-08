@@ -20,7 +20,7 @@ module Plexus
 
       def remove_edge!(u, v=nil)
         unless u.kind_of? Plexus::Arc
-          raise ArgumentError if @parallel_edges 
+          raise ArgumentError if @parallel_edges
           u = edge_class[u,v]
         end
         super(u.reverse) unless u.source == u.target
@@ -49,7 +49,7 @@ module Plexus
 
       def chromatic_number
         return triangulated_chromatic_number if triangulated?
-        raise NotImplementedError    
+        raise NotImplementedError
       end
 
       # An interval graph can have its vertices into one-to-one

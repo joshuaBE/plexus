@@ -1,7 +1,6 @@
 module Plexus
-  # Using the methods required by the {GraphAPI}, it implements all the
-  # *basic* functions of a {Graph} using *only* functions
-  # requested in {GraphAPI}. The process is under the control of the pattern
+  # Using only a basic methods set, it implements all the *basic* functions
+  # of a graph. The process is under the control of the pattern
   # {AdjacencyGraphBuilder}, unless a specific implementation is specified
   # during initialization.
   #
@@ -49,7 +48,6 @@ module Plexus
         # These inclusions trigger some validations checks by the way.
         include(args[:implementation]       ? args[:implementation]       : Plexus::AdjacencyGraphBuilder)
         include(args[:algorithmic_category] ? args[:algorithmic_category] : Plexus::DigraphBuilder       )
-        include Plexus::GraphAPI
       end
 
       implementation_initialize(*params)
