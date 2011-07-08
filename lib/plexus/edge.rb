@@ -20,7 +20,9 @@ module Plexus
       [[source,target].max, [source,target].min] <=> [[rhs.source,rhs.target].max, [rhs.source,rhs.target].min]
     end
 
-    # Edge[1,2].to_s == "(1=2 'label)"
+    # Edge[1,2].to_s => "(1=2)"
+    # Edge[2,1].to_s => "(1=2)"
+    # Edge[2,1,'test'].to_s => "(1=2 test)"
     def to_s
       l = label ? " '#{label.to_s}'" : ''
       s = source.to_s

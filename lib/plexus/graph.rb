@@ -18,6 +18,7 @@ module Plexus
     #end
     # after the class->module transition, has been moved at implementation level,
     # using a helper (extends_host)
+    #
     extends_host
     module ClassMethods
       def [](*a)
@@ -30,6 +31,7 @@ module Plexus
     # @param [Hash(Plexus::Graph, Array)] *params initialization parameters.
     #   See {AdjacencyGraphBuilder#implementation_initialize} for more details.
     # @return [Graph]
+    #
     def initialize(*params)
       raise ArgumentError if params.any? do |p|
         # FIXME: checking wether it's a GraphBuilder (module) is not sufficient

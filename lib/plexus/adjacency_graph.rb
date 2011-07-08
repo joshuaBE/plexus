@@ -8,7 +8,7 @@ module Plexus
   module AdjacencyGraphBuilder
 
     # Defines a useful `push` -> `add` alias for arrays.
-    class ArrayWithAdd < Array 
+    class ArrayWithAdd < Array
       alias add push
     end
 
@@ -23,8 +23,9 @@ module Plexus
     # * `:loops denotes` that loops are allowed
     #
     # @param *params [Hash] the initialization parameters
+    #
     def implementation_initialize(*params)
-      @vertex_dict = Hash.new    
+      @vertex_dict = Hash.new
       clear_all_labels
 
       # FIXME: could definitely make use of the activesupport helper
@@ -38,19 +39,19 @@ module Plexus
       @edgelist_class = @parallel_edges ? ArrayWithAdd : Set
       if @parallel_edges
         @edge_number      = Hash.new
-        @next_edge_number = 0 
+        @next_edge_number = 0
       end
 
       # Copy any given graph into this graph.
       params.select { |p| p.is_a? Plexus::GraphBuilder }.each do |g|
-        g.edges.each do |e| 
+        g.edges.each do |e|
           add_edge!(e)
           edge_label_set(e, edge_label(e)) if edge_label(e)
         end
         g.vertices.each do |v|
           add_vertex!(v)
           vertex_label_set(v, vertex_label(v)) if vertex_label(v)
-        end  
+        end
       end
 
       # Add all array edges specified.
@@ -90,7 +91,7 @@ module Plexus
     end
 
     # Adds an edge to the graph.
-    # 
+    #
     # Can be called in two basic ways, label is optional:
     # @overload add_edge!(arc)
     #   Using an explicit {Arc}
@@ -104,6 +105,7 @@ module Plexus
     #   @param [Integer] n (nil) {Arc arc} number of `(u, v)` (if `nil` and if `u`
     #     has an {ArcNumber}, then it will be used)
     #   @return [AdjacencyGraph] `self`
+    #
     def add_edge!(u, v = nil, l = nil, n = nil)
       n = u.number if u.class.include? ArcNumber and n.nil?
       u, v, l = u.source, u.target, u.label if u.is_a? Plexus::Arc
@@ -130,14 +132,14 @@ module Plexus
     # @param [vertex] v
     # @return [AdjacencyGraph] `self`
     def remove_vertex!(v)
-      # FIXME This is broken for multi graphs 
+      # FIXME This is broken for multi graphs
       @vertex_dict.delete(v)
       @vertex_dict.each_value { |adjList| adjList.delete(v) }
-      @vertex_dict.keys.each do |u| 
-        delete_label(edge_class[u,v]) 
+      @vertex_dict.keys.each do |u|
+        delete_label(edge_class[u,v])
         delete_label(edge_class[v,u])
       end
-      delete_label(v) 
+      delete_label(v)
       self
     end
 
@@ -167,9 +169,9 @@ module Plexus
         index = @edge_number[u.source].index(u.number)
         raise NoArcError unless index
         @vertex_dict[u.source].delete_at(index)
-        @edge_number[u.source].delete_at(index) 
+        @edge_number[u.source].delete_at(index)
       else
-        @vertex_dict[u.source].delete(u.target) 
+        @vertex_dict[u.source].delete(u.target)
       end
       self
     end
@@ -181,7 +183,7 @@ module Plexus
       @vertex_dict.keys
     end
 
-    # Returns an array of edges, most likely of class {Arc} or {Edge} depending 
+    # Returns an array of edges, most likely of class {Arc} or {Edge} depending
     # upon the type of graph.
     #
     # @return [Array]
@@ -219,6 +221,5 @@ module Plexus
         graph_adjacent(x,options)
       end
     end
-
-  end # Adjacency Graph
-end # Plexus
+  end
+end

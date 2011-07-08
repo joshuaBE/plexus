@@ -41,7 +41,7 @@ module Plexus
     end
 
     # Set the label for an edge.
-    def edge_label_set(u, v = nil, l = nil, n = nil) 
+    def edge_label_set(u, v = nil, l = nil, n = nil)
       u.is_a?(Plexus::Arc) ? l = v : u = edge_convert(u, v, n)
       edge_label_dict[u] = l
       self
@@ -82,10 +82,10 @@ module Plexus
     #
     # If no weight value is specified, the label itself is treated as the cost value.
     #
-    # Note: This function will not work for Pseudo or Multi graphs at present. 
+    # Note: This function will not work for Pseudo or Multi graphs at present.
     # FIXME: Remove u,v interface to fix Pseudo Multi graph problems.
     def cost(u, v = nil, weight = nil)
-      u.is_a?(Arc) ? weight = v : u = edge_class[u,v] 
+      u.is_a?(Arc) ? weight = v : u = edge_class[u,v]
       case weight
       when Proc
         weight.call(u)
@@ -108,6 +108,5 @@ module Plexus
         self[u][name] = value
       end
     end
-
-  end # Labels
-end # Plexus
+  end
+end

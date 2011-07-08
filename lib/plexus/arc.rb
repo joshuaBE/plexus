@@ -27,7 +27,8 @@ module Plexus
       [source, target] <=> [rhs.source, rhs.target]
     end
 
-    # Arc.new[1,2].to_s => "(1-2 'label')"
+    # Arc[1,2].to_s => "(1-2)"
+    # Arc[1,2,'test'].to_s => "(1-2 test)"
     def to_s
       l = label ? " '#{label.to_s}'" : ''
       "(#{source}-#{target}#{l})"
