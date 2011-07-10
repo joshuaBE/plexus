@@ -19,6 +19,7 @@ Graph algorithms currently provided are:
   s.email = %q{jd@vauguet.fr}
   s.files = Dir["lib/**/*"] + Dir["vendor/**/*"] + Dir["spec/**/*"] + ["Gemfile", "LICENSE", "Rakefile", "README.md"]
   s.homepage = %q{http://github.com/chikamichi/plexus}
+  s.add_dependency "rake"
   s.add_dependency "activesupport"
   s.add_dependency "facets"
   s.add_dependency "plexus"
