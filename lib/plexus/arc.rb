@@ -13,7 +13,7 @@ module Plexus
 
     # Ignore labels for equality.
     def eql?(other)
-      same_class = (self.class.ancestors.include? other.class)
+      same_class = self.class.ancestors.include?(other.class) || other.class.ancestors.include?(self.class)
       same_class && target == other.target && source == other.source
     end
     alias == eql?

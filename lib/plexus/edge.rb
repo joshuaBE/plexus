@@ -6,7 +6,7 @@ module Plexus
     # Edge equality allows for the swapping of source and target.
     #
     def eql?(other)
-      same_class = (self.class.ancestors.include? other.class)
+      same_class = self.class.ancestors.include?(other.class) || other.class.ancestors.include?(self.class)
       super || (same_class && target == other.source && source == other.target)
     end
     alias == eql?
