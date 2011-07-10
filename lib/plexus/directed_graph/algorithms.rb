@@ -68,26 +68,26 @@ module Plexus
         out_degree(v) - in_degree(v)
       end
 
-      def community(node, direction)
+      def community(node, direction, options = {:recursive => true})
         nodes, stack = {}, adjacent(node, :direction => direction)
         while n = stack.pop
           unless nodes[n.object_id] || node == n
             nodes[n.object_id] = n
-            stack += adjacent(n, :direction => direction)
+            stack += adjacent(n, :direction => direction) if options[:recursive]
           end
         end
         nodes.values
       end
 
-      def descendants(node)
+      def descendants(node, options = {:recursive => true})
         community(node, :out)
       end
 
-      def ancestors(node)
+      def ancestors(node, options = {:recursive => true})
         community(node, :in)
       end
 
-      def family(node)
+      def family(node, options = {:recursive => true})
         community(node, :all)
       end
     end

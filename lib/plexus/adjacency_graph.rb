@@ -208,6 +208,7 @@ module Plexus
     # @fixme
     def adjacent(x, options = {})
       options[:direction] ||= :out
+
       if !x.is_a?(Plexus::Arc) and (options[:direction] == :out || !directed?)
         if options[:type] == :edges
           i = -1

@@ -65,10 +65,11 @@ module Plexus
       def permutation?() comparability? and complement.comparability?; end
 
       # An undirected graph is defined to be split if there is a partition
-      # V = S + K of its vertex set into a stable set S and a complete set K.    
+      # V = S + K of its vertex set into a stable set S and a complete set K.
       def split?() triangulated? and complement.triangulated?; end
 
       private
+
       # Implementation taken from Golumbic's, "Algorithmic Graph Theory and
       # Perfect Graphs" pg. 99
       def triangulated_chromatic_number
@@ -85,6 +86,6 @@ module Plexus
         end; chi
       end
 
-    end # UndirectedGraphAlgorithms
-  end # UndirectedGraphBuilder
-end # Plexus
+    end
+  end
+end

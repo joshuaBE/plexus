@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plexus (0.5.6)
+    plexus (0.5.8)
       activesupport
       facets
       plexus
