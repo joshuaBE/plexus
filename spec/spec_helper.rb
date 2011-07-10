@@ -48,11 +48,11 @@ module AncestryHelper
 end
 
 RSpec.configure do |config|
+  config.include AncestryHelper
   # Remove this line if you don't want RSpec's should and should_not
   # methods or matchers
   require 'rspec/expectations'
   config.include RSpec::Matchers
-  config.include AncestryHelper
 
   # == Mock Framework
   config.mock_with :rspec

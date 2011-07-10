@@ -3,9 +3,11 @@ module Plexus
   # undirected graphs. Edge[u,v] == Edge[v,u]
   class Edge < Arc
 
-    # Equality allows for the swapping of source and target
+    # Edge equality allows for the swapping of source and target.
+    #
     def eql?(other)
-      super or (self.class == other.class and target == other.source and source == other.target)
+      same_class = (self.class.ancestors.include? other.class)
+      super || (same_class && target == other.source && source == other.target)
     end
     alias == eql?
 

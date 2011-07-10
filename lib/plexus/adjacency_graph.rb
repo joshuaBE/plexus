@@ -110,7 +110,7 @@ module Plexus
       n = u.number if u.class.include? ArcNumber and n.nil?
       u, v, l = u.source, u.target, u.label if u.is_a? Plexus::Arc
 
-      return self if not @allow_loops and u == v
+      return self if !@allow_loops && u == v
 
       n = (@next_edge_number += 1) unless n if @parallel_edges
       add_vertex!(u)
