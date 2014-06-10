@@ -64,6 +64,37 @@ module Plexus
       vertex_label_dict.delete(v)
     end
 
+    def vertex_labels
+      a = Hash[@vertex_labels.sort].values.compact
+      min = a.min
+      a.push(a.shift) while a[0] != a.min
+      a
+    end
+
+    def adjacent_vertex_labels
+      adjacency = {}
+      @vertex_labels.each do |vertex, label|
+        adjacency[label] = []
+        self.adjacent(vertex).each do |adj|
+          adjacency[label].push self.vertex_label(adj)
+        end
+        adjacency[label].sort!
+      end
+      adjacency
+    end
+
+    def edge_labels
+      @edge_labels.values.compact
+    end
+
+    def normal_vertex_labels
+      @vertex_labels
+    end
+
+    def labels
+      (@vertex_labels.values.compact + @edge_labels.values.compact)
+    end
+
     protected
 
     def vertex_label_dict
